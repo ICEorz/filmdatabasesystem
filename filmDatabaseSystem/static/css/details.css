@@ -7,12 +7,13 @@ body {
 }
 
 #detailsinfo {
+    font-size: 14px;
     align-items: center;
     margin-top: 2px;
     background-color: #ffffff;
     display: flex;
     margin-left: 225px;
-    margin-right: 500px;
+    margin-right: 225px;
     line-height: 2;
     border: 1px double #cccccc;
 }
@@ -22,12 +23,9 @@ body {
     margin-left: 225px;
     margin-right: 225px;
     background-color: #f6f6f6;
-    /*border: 1px double #cccccc;*/
+    border: 1px double #cccccc;
 }
 
-#detailsinfo span {
-    font-size: 14px;
-}
 
 #info {
     margin-left: 30px;

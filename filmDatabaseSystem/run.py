@@ -13,7 +13,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html', genrelist=db.genredb.keys())
+    return render_template('startest.html')
+    # return render_template('index.html', genrelist=db.genredb.keys())
 
 
 @app.route('/searchresult', methods=['POST', 'GET'])
@@ -115,7 +116,7 @@ def details(name):
     film = db.get_film_by_exact_name(name)[0]
     db.film_click(film)
     data = {}
-    data['imgpath'] = '/image/filmimage/' + str(film.id) + '.jpg'
+    data['imgpath'] = '/img/filmimage/' + str(film.id) + '.jpg'
     data['film'] = film
     return render_template('details.html', data=data, genrelist=db.genredb.keys())
 

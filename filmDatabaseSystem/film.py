@@ -9,7 +9,7 @@ import pickle
 
 
 class Film(object):
-    def __init__(self, name, director, author, actor, genre, date, detailed_info, click, id=0, score=0, espeople=0):
+    def __init__(self, name, director, author, actor, genre, date, detailed_info, click, id=0, score:float=0, espeople=0):
         self.name = name
         self.director = director
         self.author = author

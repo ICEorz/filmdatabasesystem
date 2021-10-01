@@ -84,8 +84,8 @@ class FilmDatabase(object):
             self.persondb = pickle.loads(f.read())
         with open('./database/genredb.pkl', 'rb') as f:
             self.genredb = pickle.loads(f.read())
-        # with open('./database/scoreranklist.pkl', 'rb') as f:
-        #     self.scoreranklist = pickle.loads(f.read())
+        with open('./database/scoreranklist.pkl', 'rb') as f:
+            self.scoreranklist = pickle.loads(f.read())
 
     def save_database(self):
         with open('./database/namedb.pkl', 'wb') as f:
@@ -113,14 +113,16 @@ class FilmDatabase(object):
         film.add_click()
         self.save_database()
 
-    def film_score(self, film: Film, newscore):
-        def change(flist: list, name, score, newscore):
-            now_pos = flist.index([name, score])
-            upper = upper_bound(flist, newscore, key=lambda x: x[1])
-            flist.insert(upper, [name, newscore])
-            flist.pop(now_pos)
-        change(self.scoreranklist, film.name, film.score, newscore)
+    def film_score(self, film: Film, newscore:float):
+        old_score=film.score
         film.judge_score(newscore)
+        new_score=film.score
+        def change(flist: list, name, score:float, newscore:float):
+            upper = upper_bound(flist, newscore, key=lambda x: x[1])
+            flist.insert(upper, [name, round(float(newscore), 1)])
+            now_pos = flist.index([name, round(float(score), 1)])
+            flist.pop(now_pos)
+        change(self.scoreranklist, film.name, old_score, new_score)
         self.save_database()
 
 
@@ -138,7 +140,7 @@ class FilmDatabase(object):
         res.append(['head', -float('inf')])
         res.append(['tail', float('inf')])
         for k, v in self.database.items():
-            res.append([k, v[0].score])
+            res.append([k, round(float(v[0].score), 1)])
         res = sorted(res, key=lambda t: t[1])
         self.scoreranklist = res
 
@@ -146,15 +148,15 @@ class FilmDatabase(object):
 if __name__ == '__main__':
     db = FilmDatabase()
     db.load_database()
-    db.resetclick()
+
     db.save_database()
     db.resetscore()
-    print(db.clickranklist)
     print(db.scoreranklist)
     # db.resetscore()
     # print(db.scoreranklist)
-    # db.film_score(db.get_film_by_exact_name('小丑')[0], 10)
-    # print(db.scoreranklist)
+    db.film_score(db.get_film_by_exact_name('小丑')[0], 8.0)
+    print(db.scoreranklist)
+
     # print(db.database.values()[1].score)
     # for d in db.database.values():
     #     d.score=0
