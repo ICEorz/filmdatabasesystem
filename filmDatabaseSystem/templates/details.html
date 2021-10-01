@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FilmDbSys-details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/details.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='/image/icon.ico') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='/image/icon.ico') }}" />
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</head>
+<body>
+    <div id="mailhead">
+        <div id="mainimg">
+            <a href="{{ url_for('index') }}" >
+                <img src="{{ url_for('static', filename='image/filmdbsys.png') }}" width="275px"/>
+            </a>
+        </div>
+        <div id="navi">
+            <ul>
+                <li class="naviitem"><a href="{{ url_for('index') }}">首页</a></li>
+                <li class="naviitem"><a href="{{ url_for('index') }}">首页</a></li>
+                <li class="naviitem"><a href="{{ url_for('index') }}">首页</a></li>
+                <li class="naviitem">
+                    <div id="searchbox">
+                        <form action="{{ url_for('searchresult') }}" method="POST" autocomplete="off">
+                            <input type="search" name="Name" id="searchinput" placeholder="input film name" />
+                            <button type="submit" id="searchbutton" />
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="headline">
+        <h1>{{ data.film.name }}</h1>
+    </div>
+    <div id="detailsinfo">
+        <div id="mainpic">
+            <img alt="{{ data.film.name }}" src="{{ url_for('static', filename=data.imgpath) }}" height="275"/>
+        </div>
+        <div id="info">
+            <span>
+                <span class="p1">电影名</span>
+                :
+                <span class="infoitem">
+                    {{ data.film.name }}
+                </span>
+            </span>
+                <br>
+            <span>
+                <span class="p1">导演</span>
+                :
+                <span class="infoitem">
+                    {% for d in data.film.director %}
+                    {{ d }}
+                    {% endfor %}
+                </span>
+            </span>
+                <br>
+            <span>
+                <span class="p1">编剧</span>
+                :
+                <span class="infoitem">
+                    {% for d in data.film.author %}
+                    {{ d }}
+                    {% endfor %}
+                </span>
+            </span>
+                <br>
+            <span>
+                <span class="p1">主演</span>
+                :
+                <span class="infoitem">
+                    {% for d in data.film.actor %}
+                    {{ d }}
+                    {% endfor %}
+                </span>
+            </span>
+                <br>
+            <span>
+                <span class="p1">类型</span>
+                :
+                <span class="infoitem">
+                    {% for d in data.film.genre %}
+                    {{ d }}
+                    {% endfor %}
+                </span>
+            </span>
+            <br>
+            <span>
+                <span class="p1">上映日期</span>
+                :
+                <span class="infoitem">
+                    {{ data.film.date }}
+                </span>
+            </span>
+            <br>
+            <span>
+                <span class="p1">IMDb</span>
+                :
+                <span class="infoitem">
+                    {{ data.film.id }}
+                </span>
+            </span>
+            <br>
+            <span>
+                <span class="p1">点击量</span>
+                :
+                <span class="infoitem">
+                    {{ data.film.click }}
+                </span>
+            </span>
+            <br>
+        </div>
+    </div>
+    <div id="summaryhead">
+        <h3>剧情简介：</h3>
+    </div>
+    <div id="summary">
+        {{ data.film.detailed_info }}
+    </div>
+</body>
+</html>
