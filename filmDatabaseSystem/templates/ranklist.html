@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>FilmDbSys-searchresult</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/ranklist.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='/image/icon.ico') }}" />
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</head>
+<body>
+    <div id="mailhead">
+        <div id="mainimg">
+            <a href="{{ url_for('index') }}" >
+                <img src="{{ url_for('static', filename='image/filmdbsys.png') }}" width="275px"/>
+            </a>
+        </div>
+        <div id="navi">
+            <ul>
+                <li class="naviitem"><a href="{{ url_for('index') }}">首页</a></li>
+                <li class="naviitem"><a href="{{ url_for('index') }}">首页</a></li>
+                <li class="naviitem"><a href="{{ url_for('index') }}">首页</a></li>
+                <li class="naviitem">
+                    <div id="searchbox">
+                        <form action="{{ url_for('searchresult') }}" method="POST" autocomplete="off">
+                            <input type="search" name="Name" id="searchinput" placeholder="搜索电影、影人、类型" />
+                            <button type="submit" id="searchbutton" />
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="datalist">
+        {% for d in data %}
+            <div class="rankinfo">
+                <div class="filmbox">
+                    <a href="{{ url_for('details', name=d.name) }}">
+                        <img src="/static/image/filmimage/{{ d.id }}.jpg" width="130">
+                    </a>
+                    <div class="filminfo">
+                        <span><a href="{{ url_for('details', name=d.name) }}"><b>{{ d.name }}</b></a></span>
+                        <br>
+                        <span>
+                            <span class="p1">导演</span>
+                            :
+                            <span class="infoitem">
+                                {% for s in d.director %}
+                                {{ s }}
+                                {% endfor %}
+                            </span>
+                        </span>
+                            <br>
+                        <span>
+                            <span class="p1">编剧</span>
+                            :
+                            <span class="infoitem">
+                                {% for s in d.author %}
+                                {{ s }}
+                                {% endfor %}
+                            </span>
+                        </span>
+                            <br>
+                        <span>
+                            <span class="p1">主演</span>
+                            :
+                            <span class="infoitem">
+                                {% for s in d.actor %}
+                                {{ s }}
+                                {% endfor %}
+                            </span>
+                        </span>
+                            <br>
+                        <span>
+                            <span class="p1">类型</span>
+                            :
+                            <span class="infoitem">
+                                {% for s in d.genre %}
+                                {{ s }}
+                                {% endfor %}
+                            </span>
+                        </span>
+                            <br>
+                        <span>
+                            <span class="p1">评分</span>
+                            :
+                            <span class="infoitem">
+                                {% if d.score == 0 %}
+                                    暂无评分
+                                {% else %}
+                                    {{ d.score }}
+                                {% endif %}
+                            </span>
+                        </span>
+                            <br>
+                        <span>
+                            <span class="p1">点击量</span>
+                            :
+                            <span class="infoitem">
+                                {{ d.click }}
+                            </span>
+                        </span>
+                            <br>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="pageinfo">
+        <div style="color: gray; font-size: small">
+            当前页数: {{ paginate.page }}
+            总页数: {{ paginate.pages }}
+            一共有{{ paginate.total }}条数据
+        </div>
+        <br>
+        <div>
+            <ul class="pagination">
+                {% if paginate.has_prev %}
+                    <li><a href="{{ url_for('ranklist', name=pagename, page=paginate.prev_num ) }}">«</a></li>
+                {% endif %}
+                {% for i in paginate.iter_pages() %}
+                    {% if i %}
+                        {% if i == paginate.page %}
+                            <li><a href="#" class="active">{{ i }}</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('ranklist', name=pagename, page=i ) }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li><a href="#">...</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if paginate.has_next %}
+                    <li><a href="{{ url_for('ranklist', name=pagename, page=paginate.next_num ) }}">»</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

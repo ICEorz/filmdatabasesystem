@@ -37,7 +37,7 @@ ul.pagination li a:hover:not(.active) {
     margin-top: 50px;
 }
 
-.searchinfo {
+.rankinfo {
     margin: 30px 0;
     border: 1px double #cccccc;
     background-color: white;
@@ -60,13 +60,4 @@ ul.pagination li a:hover:not(.active) {
 
 #pageinfo #pageinfo div {
     align-items: center;
-}
-
-.personinfo {
-    display: flex;
-}
-
-.personinfo span {
-    margin-left: 10px;
-    margin-top: 10px;
 }

@@ -12,6 +12,7 @@ class FilmDatabase(object):
     def __init__(self):
         self.database = None
         self.clickranklist = None
+        self.scoreranklist = None
         self.modify_flag = False
         self.persondb = None
         self.genredb = None
@@ -68,7 +69,7 @@ class FilmDatabase(object):
     def get_film_by_genre_name(self, name):
         return self.genredb[name]
 
-    def get_filmranklist(self):
+    def get_filmclickranklist(self):
         return self.clickranklist[-2:0:-1]
 
     def load_database(self):
@@ -80,52 +81,89 @@ class FilmDatabase(object):
             self.persondb = pickle.loads(f.read())
         with open('./database/genredb.pkl', 'rb') as f:
             self.genredb = pickle.loads(f.read())
+        # with open('./database/scoreranklist.pkl', 'rb') as f:
+        #     self.scoreranklist = pickle.loads(f.read())
 
     def save_database(self):
         with open('./database/namedb.pkl', 'wb') as f:
             f.write(pickle.dumps(self.database))
-        with open('./database/clickranklist.pkl', 'wb') as f:
-            f.write(pickle.dumps(self.clickranklist))
         with open('./database/persondb.pkl', 'wb') as f:
             f.write(pickle.dumps(self.persondb))
         with open('./database/genredb.pkl', 'wb') as f:
             f.write(pickle.dumps(self.genredb))
 
+    def save_click(self):
+        with open('./database/clickranklist.pkl', 'wb') as f:
+            f.write(pickle.dumps(self.clickranklist))
+
+    def save_score(self):
+        with open('./database/scoreranklist.pkl', 'wb') as f:
+            f.write(pickle.dumps(self.scoreranklist))
+
     def film_click(self, film: Film):
         def change(flist: list, name, click):
             upper = upper_bound(flist, click, key=lambda x: x[1])
             lower = lower_bound(flist, click, key=lambda x: x[1])
-            now_pos = flist.index([name, click], lower, upper)
+            now_pos = flist.index([name, click])
             flist[now_pos][1] += 1
             if now_pos == upper - 1:
                 return
             else:
                 flist[now_pos], flist[upper-1] = flist[upper-1], flist[now_pos]
         change(self.clickranklist, film.name, film.click)
-        self.get_film_by_exact_name(film.name)[0].add_click()
-        self.save_database()
+        film.add_click()
+        self.save_click()
+
+    def film_score(self, film: Film, newscore):
+        def change(flist: list, name, score, newscore):
+            now_pos = flist.index([name, score])
+            upper = upper_bound(flist, newscore, key=lambda x: x[1])
+            flist.insert(upper, [name, newscore])
+            flist.pop(now_pos)
+        change(self.scoreranklist, film.name, film.score, newscore)
+        film.judge_score(newscore)
+        self.save_score()
+
 
     def resetclick(self):
         res = []
         res.append(['head', -float('inf')])
         res.append(['tail', float('inf')])
         for k, v in self.database.items():
-            res.append([k, v.click])
-        sorted(res, key=lambda t: t[1])
+            res.append([k, v[0].click])
+        res = sorted(res, key=lambda t: t[1])
         self.clickranklist = res
+
+    def resetscore(self):
+        res = []
+        res.append(['head', -float('inf')])
+        res.append(['tail', float('inf')])
+        for k, v in self.database.items():
+            res.append([k, v[0].score])
+        res = sorted(res, key=lambda t: t[1])
+        self.scoreranklist = res
 
 
 if __name__ == '__main__':
     db = FilmDatabase()
     db.load_database()
-    print(db.database.values()[1].score)
+    db.resetclick()
+    db.save_click()
+    db.resetscore()
+    print(db.clickranklist)
+    print(db.scoreranklist)
+    # db.resetscore()
+    # print(db.scoreranklist)
+    # db.film_score(db.get_film_by_exact_name('小丑')[0], 10)
+    # print(db.scoreranklist)
+    # print(db.database.values()[1].score)
     # for d in db.database.values():
     #     d.score=0
     #     d.espeople=0
-    path = './static/image/filmimage/'
-    for k in db.database.keys():
-        print(k)
-    print("龙黑" > "龙")
+    # path = './static/image/filmimage/'
+    # for k in db.database.keys():
+    #     print(k)
+    # print("龙黑" > "龙")
     # for k, v in db.persondb.items():
     #     print(k, v)
     # print(len(db.database))

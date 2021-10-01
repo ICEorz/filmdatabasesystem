@@ -27,8 +27,6 @@ def searchresult(nowname=['']):
         page = request.args.get('page', 1, type=int)
         if namem:
             nowname = [namem]
-
-
     '''
         查找电影名
         查找人名
@@ -76,7 +74,6 @@ def searchresult(nowname=['']):
                 ]
             )
     # pagination
-
     limit = 10
     start = (page - 1) * limit
     end = page * limit if len(data_list) > page * limit else len(data_list)
@@ -85,6 +82,31 @@ def searchresult(nowname=['']):
     paginate = Pagination(data_list, page, per_page=10, total=len(data_list), items=data_list[start:end])
     data = paginate.items
     return render_template('searchresult.html', pagename=nowname, paginate=paginate, data=data)
+
+
+@app.route('/ranklist/<name>', methods=['GET'])
+def ranklist(name=[]):
+    data_list = []
+    namem = request.args.get('name', None)
+    page = request.args.get('page', 1, type=int)
+    print(page)
+    print(name)
+    if namem:
+        name = [namem]
+
+    if name == 'score':
+        pass
+    else:
+        for nm in db.get_filmclickranklist():
+            data_list.append(db.get_film_by_exact_name(nm[0])[0])
+    # pagination
+    limit = 10
+    start = (page - 1) * limit
+    end = page * limit if len(data_list) > page * limit else len(data_list)
+
+    paginate = Pagination(data_list, page, per_page=10, total=len(data_list), items=data_list[start:end])
+    data = paginate.items
+    return render_template('ranklist.html', pagename=name, paginate=paginate, data=data)
 
 
 @app.route('/details/<name>')

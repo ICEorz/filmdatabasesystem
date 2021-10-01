@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>FilmDbSys-searchresult</title>
@@ -9,7 +9,7 @@
     <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </head>
-<div>
+<body>
     <div id="mailhead">
         <div id="mainimg">
             <a href="{{ url_for('index') }}" >
@@ -24,7 +24,7 @@
                 <li class="naviitem">
                     <div id="searchbox">
                         <form action="{{ url_for('searchresult') }}" method="POST" autocomplete="off">
-                            <input type="search" name="Name" id="searchinput" placeholder="input film name" />
+                            <input type="search" name="Name" id="searchinput" placeholder="搜索电影、影人、类型" />
                             <button type="submit" id="searchbutton" />
                         </form>
                     </div>
@@ -49,7 +49,7 @@
                 <div class="searchinfo">
                     <div class="filmbox">
                         <a href="{{ url_for('details', name=d[1].name) }}">
-                            <img src="/static/image/filmimage/{{ d[1].id }}.jpg" width="130">
+                            <img src="/static/image/filmimage/{{ d[1].id }}.jpg" width="140">
                         </a>
                         <div class="filminfo">
                             <span><a href="{{ url_for('details', name=d[1].name) }}"><b>{{ d[1].name }}</b></a></span>
@@ -103,6 +103,14 @@
                                     {% else %}
                                         {{ d[1].score }}
                                     {% endif %}
+                                </span>
+                            </span>
+                                <br>
+                            <span>
+                                <span class="p1">点击量</span>
+                                :
+                                <span class="infoitem">
+                                    {{ d[1].click }}
                                 </span>
                             </span>
                                 <br>

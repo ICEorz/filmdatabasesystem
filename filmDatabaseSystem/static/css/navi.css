@@ -76,3 +76,7 @@ img {
     cursor: pointer;
     margin-left: 10px;
 }
+
+input::-webkit-input-placeholder {
+    font-size: 14px;
+}
