@@ -17,13 +17,18 @@ def index():
 
 
 @app.route('/searchresult', methods=['POST', 'GET'])
-def searchresult(nowname=nname):
+def searchresult(nowname=['']):
     if request.method == 'POST':
         res = request.form
         nowname = [res['Name']]
         page = 1
     else:
+        namem = request.args.get('nowname', None)
         page = request.args.get('page', 1, type=int)
+        if namem:
+            nowname = [namem]
+
+
     '''
         查找电影名
         查找人名
@@ -40,7 +45,7 @@ def searchresult(nowname=nname):
     else:
         personres = db.get_film_by_person_name(fname)
         if personres:
-            res_list = [personres[0].name]
+            res_list = personres
         else:
             genreres = db.get_film_by_genre_name(fname)
             if genreres:
@@ -51,27 +56,35 @@ def searchresult(nowname=nname):
                     res_list = partlist
                 else:
                     res_list = db.get_film_by_fuzz_name(fname) + db.get_film_by_fuzz_person_name(fname)
-    isperson = []
-    for k in res_list:
-        if db.get_film_by_person_name(k):
-            isperson.append(True)
+
+    # dataprocess
+    data_list = []
+    for item in res_list:
+        if db.get_film_by_exact_name(item):
+            fm = db.get_film_by_exact_name(item)[0]
+            data_list.append(
+                [
+                    False,  # isperson
+                    fm,  # data
+                ]
+            )
         else:
-            isperson.append(False)
+            data_list.append(
+                [
+                    True,  # isperson
+                    item  # name
+                ]
+            )
+    # pagination
 
-    datalist = []
-    for k in range(len(res_list)):
-        datalist.append((res_list[k], isperson[k]))
-    # 分页
     limit = 10
-
-
     start = (page - 1) * limit
-    end = page * limit if len(datalist) > page * limit else len(datalist)
+    end = page * limit if len(data_list) > page * limit else len(data_list)
     per_page = int(request.args.get('per_page', 2))
 
-    paginate = Pagination(datalist, page, per_page=10, total=len(datalist), items=datalist[start:end])
+    paginate = Pagination(data_list, page, per_page=10, total=len(data_list), items=data_list[start:end])
     data = paginate.items
-    return render_template('searchresult.html', paginate=paginate, data=data)
+    return render_template('searchresult.html', pagename=nowname, paginate=paginate, data=data)
 
 
 @app.route('/details/<name>')

@@ -1,2 +1,41 @@
 @import "mainhead.css";
 @import "navi.css";
+
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {
+    display: inline;
+}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+ul.pagination li a.active {
+    background-color: #690;
+    color: white;
+}
+
+ul.pagination li a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+#datalist {
+    margin-left: 225px;
+    margin-top: 50px;
+}
+
+.searchinfo {
+    margin: 30px 0;
+}
+
+.filminfo {
+    display: flex;
+}

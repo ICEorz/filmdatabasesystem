@@ -48,7 +48,7 @@ class FilmDatabase(object):
         res = []
         for k, v in self.persondb.items():
             if name in k:
-                res.extend(v)
+                res.append(k)
         return res
 
     def get_film_by_fuzz_person_name(self, name):
@@ -123,10 +123,9 @@ if __name__ == '__main__':
     #     d.score=0
     #     d.espeople=0
     path = './static/image/filmimage/'
-    for data in db.database.values():
-        if os.path.exists(path + data.name + '.jpg'):
-            os.rename(path + data.name + '.jpg', path + data.id + '.jpg')
-
+    for k in db.database.keys():
+        print(k)
+    print("龙黑" > "龙")
     # for k, v in db.persondb.items():
     #     print(k, v)
     # print(len(db.database))
