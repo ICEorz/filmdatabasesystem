@@ -18,10 +18,37 @@
             </a>
         </div>
         <div id="navi">
-            <ul>
-                <li class="naviitem"><a href="{{ url_for('index') }}">首页</a></li>
-                <li class="naviitem"><a href="{{ url_for('index') }}">首页</a></li>
-                <li class="naviitem"><a href="{{ url_for('index') }}">首页</a></li>
+            <ul class="naviul">
+                <li class="naviitem"><a href="{{ url_for('index') }}" class="navia">首页</a></li>
+                <li class="naviitem">
+                    <div class="dropdown">
+                        <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">类型
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            {% for d in genrelist %}
+                                <li role="presentation" id="genredropli">
+                                    <a role="menuitem" tabindex="-1" href="{{ url_for('searchresult', nowname=d)}}" id="genredropa">{{ d }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                <li class="naviitem">
+                    <div class="dropdown">
+                        <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">排行耪
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            <li role="presentation" id="genredropli">
+                                <a role="menuitem" tabindex="-1" href="{{ url_for('ranklist', name="click")}}" id="genredropa">点击量</a>
+                            </li>
+                            <li role="presentation" id="genredropli">
+                                <a role="menuitem" tabindex="-1" href="{{ url_for('ranklist', name="score")}}" id="genredropa">评分</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 <li class="naviitem">
                     <div id="searchbox">
                         <form action="{{ url_for('searchresult') }}" method="POST" autocomplete="off">
@@ -30,6 +57,7 @@
                         </form>
                     </div>
                 </li>
+
             </ul>
         </div>
     </div>

@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', genrelist=db.genredb.keys())
 
 
 @app.route('/searchresult', methods=['POST', 'GET'])
@@ -81,7 +81,7 @@ def searchresult(nowname=['']):
 
     paginate = Pagination(data_list, page, per_page=10, total=len(data_list), items=data_list[start:end])
     data = paginate.items
-    return render_template('searchresult.html', pagename=nowname, paginate=paginate, data=data)
+    return render_template('searchresult.html', pagename=nowname, paginate=paginate, data=data, genrelist=db.genredb.keys())
 
 
 @app.route('/ranklist/<name>', methods=['GET'])
@@ -95,7 +95,8 @@ def ranklist(name=[]):
         name = [namem]
 
     if name == 'score':
-        pass
+        for nm in db.get_filmscoreranklist():
+            data_list.append(db.get_film_by_exact_name(nm[0])[0])
     else:
         for nm in db.get_filmclickranklist():
             data_list.append(db.get_film_by_exact_name(nm[0])[0])
@@ -106,7 +107,7 @@ def ranklist(name=[]):
 
     paginate = Pagination(data_list, page, per_page=10, total=len(data_list), items=data_list[start:end])
     data = paginate.items
-    return render_template('ranklist.html', pagename=name, paginate=paginate, data=data)
+    return render_template('ranklist.html', pagename=name, paginate=paginate, data=data, genrelist=db.genredb.keys())
 
 
 @app.route('/details/<name>')
@@ -116,7 +117,7 @@ def details(name):
     data = {}
     data['imgpath'] = '/image/filmimage/' + str(film.id) + '.jpg'
     data['film'] = film
-    return render_template('details.html', data=data)
+    return render_template('details.html', data=data, genrelist=db.genredb.keys())
 
 
 if __name__ == '__main__':

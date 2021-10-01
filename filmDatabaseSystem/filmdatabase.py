@@ -72,6 +72,9 @@ class FilmDatabase(object):
     def get_filmclickranklist(self):
         return self.clickranklist[-2:0:-1]
 
+    def get_filmscoreranklist(self):
+        return self.scoreranklist[-2:0:-1]
+
     def load_database(self):
         with open('./database/namedb.pkl', 'rb') as f:
             self.database = pickle.loads(f.read())
@@ -91,12 +94,8 @@ class FilmDatabase(object):
             f.write(pickle.dumps(self.persondb))
         with open('./database/genredb.pkl', 'wb') as f:
             f.write(pickle.dumps(self.genredb))
-
-    def save_click(self):
         with open('./database/clickranklist.pkl', 'wb') as f:
             f.write(pickle.dumps(self.clickranklist))
-
-    def save_score(self):
         with open('./database/scoreranklist.pkl', 'wb') as f:
             f.write(pickle.dumps(self.scoreranklist))
 
@@ -112,7 +111,7 @@ class FilmDatabase(object):
                 flist[now_pos], flist[upper-1] = flist[upper-1], flist[now_pos]
         change(self.clickranklist, film.name, film.click)
         film.add_click()
-        self.save_click()
+        self.save_database()
 
     def film_score(self, film: Film, newscore):
         def change(flist: list, name, score, newscore):
@@ -122,7 +121,7 @@ class FilmDatabase(object):
             flist.pop(now_pos)
         change(self.scoreranklist, film.name, film.score, newscore)
         film.judge_score(newscore)
-        self.save_score()
+        self.save_database()
 
 
     def resetclick(self):
@@ -148,7 +147,7 @@ if __name__ == '__main__':
     db = FilmDatabase()
     db.load_database()
     db.resetclick()
-    db.save_click()
+    db.save_database()
     db.resetscore()
     print(db.clickranklist)
     print(db.scoreranklist)
