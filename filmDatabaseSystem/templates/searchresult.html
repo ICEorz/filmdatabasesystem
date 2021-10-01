@@ -36,15 +36,77 @@
         {% for d in data %}
             {% if d[0] %}
                 <div class="searchinfo">
-                    <a href="{{ url_for('searchresult', nowname=d[1]) }}">{{ d[1] }}</a>
+                    <div class="personinfo">
+                        <a href="{{ url_for('searchresult', nowname=d[1]) }}">
+                            <img src="/static/image/unknowperson.jpg" width="140"/>
+                        </a>
+                        <span>
+                            <a href="{{ url_for('searchresult', nowname=d[1]) }}"><h4><b>{{ d[1] }}</b></h4></a>
+                        </span>
+                    </div>
                 </div>
             {% else %}
                 <div class="searchinfo">
-                    <div class="filminfo">
+                    <div class="filmbox">
                         <a href="{{ url_for('details', name=d[1].name) }}">
                             <img src="/static/image/filmimage/{{ d[1].id }}.jpg" width="130">
                         </a>
-                        <a href="{{ url_for('details', name=d[1].name) }}">{{ d[1].name }}</a>
+                        <div class="filminfo">
+                            <span><a href="{{ url_for('details', name=d[1].name) }}"><b>{{ d[1].name }}</b></a></span>
+                            <br>
+                            <span>
+                                <span class="p1">导演</span>
+                                :
+                                <span class="infoitem">
+                                    {% for s in d[1].director %}
+                                    {{ s }}
+                                    {% endfor %}
+                                </span>
+                            </span>
+                                <br>
+                            <span>
+                                <span class="p1">编剧</span>
+                                :
+                                <span class="infoitem">
+                                    {% for s in d[1].author %}
+                                    {{ s }}
+                                    {% endfor %}
+                                </span>
+                            </span>
+                                <br>
+                            <span>
+                                <span class="p1">主演</span>
+                                :
+                                <span class="infoitem">
+                                    {% for s in d[1].actor %}
+                                    {{ s }}
+                                    {% endfor %}
+                                </span>
+                            </span>
+                                <br>
+                            <span>
+                                <span class="p1">类型</span>
+                                :
+                                <span class="infoitem">
+                                    {% for s in d[1].genre %}
+                                    {{ s }}
+                                    {% endfor %}
+                                </span>
+                            </span>
+                                <br>
+                            <span>
+                                <span class="p1">评分</span>
+                                :
+                                <span class="infoitem">
+                                    {% if d[1].score == 0 %}
+                                        暂无评分
+                                    {% else %}
+                                        {{ d[1].score }}
+                                    {% endif %}
+                                </span>
+                            </span>
+                                <br>
+                        </div>
                     </div>
                 </div>
             {% endif %}
@@ -52,29 +114,33 @@
     </div>
 
     <div id="pageinfo">
-        当前页数: {{ paginate.page }}
-        总页数: {{ paginate.pages }}
-        一共有{{ paginate.total }}条数据
+        <div style="color: gray; font-size: small">
+            当前页数: {{ paginate.page }}
+            总页数: {{ paginate.pages }}
+            一共有{{ paginate.total }}条数据
+        </div>
         <br>
-        <ul class="pagination">
-            {% if paginate.has_prev %}
-                <li><a href="{{ url_for('searchresult', nowname=pagename, page=paginate.prev_num ) }}">«</a></li>
-            {% endif %}
-            {% for i in paginate.iter_pages() %}
-                {% if i %}
-                    {% if i == paginate.page %}
-                        <li><a href="#" class="active">{{ i }}</a></li>
-                    {% else %}
-                        <li><a href="{{ url_for('searchresult', nowname=pagename, page=i ) }}">{{ i }}</a></li>
-                    {% endif %}
-                {% else %}
-                    <li><a href="#">...</a></li>
+        <div>
+            <ul class="pagination">
+                {% if paginate.has_prev %}
+                    <li><a href="{{ url_for('searchresult', nowname=pagename, page=paginate.prev_num ) }}">«</a></li>
                 {% endif %}
-            {% endfor %}
-            {% if paginate.has_next %}
-                <li><a href="{{ url_for('searchresult', nowname=pagename, page=paginate.next_num ) }}">»</a></li>
-            {% endif %}
-        </ul>
+                {% for i in paginate.iter_pages() %}
+                    {% if i %}
+                        {% if i == paginate.page %}
+                            <li><a href="#" class="active">{{ i }}</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('searchresult', nowname=pagename, page=i ) }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li><a href="#">...</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if paginate.has_next %}
+                    <li><a href="{{ url_for('searchresult', nowname=pagename, page=paginate.next_num ) }}">»</a></li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
 </body>
 </html>

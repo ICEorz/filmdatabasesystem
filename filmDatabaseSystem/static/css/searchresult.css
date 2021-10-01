@@ -1,6 +1,10 @@
 @import "mainhead.css";
 @import "navi.css";
 
+body {
+    background-color: #f6f6f6;
+}
+
 ul.pagination {
     display: inline-block;
     padding: 0;
@@ -29,13 +33,40 @@ ul.pagination li a:hover:not(.active) {
 
 #datalist {
     margin-left: 225px;
+    margin-right: 225px;
     margin-top: 50px;
 }
 
 .searchinfo {
     margin: 30px 0;
+    border: 1px double #cccccc;
+    background-color: white;
+}
+
+.filmbox {
+    display: flex;
+    align-items: center;
 }
 
 .filminfo {
+    margin-left: 30px;
+    line-height: 2;
+}
+
+#pageinfo {
+    text-align: center;
+    margin: 30px 225px;
+}
+
+#pageinfo #pageinfo div {
+    align-items: center;
+}
+
+.personinfo {
     display: flex;
+}
+
+.personinfo span {
+    margin-left: 10px;
+    margin-top: 10px;
 }
