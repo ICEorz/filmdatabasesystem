@@ -8,27 +8,28 @@ body {
 
 #detailsinfo {
     font-size: 14px;
-    align-items: center;
+    align-items: baseline;
     margin-top: 2px;
     background-color: #ffffff;
-    display: flex;
     margin-left: 225px;
     margin-right: 225px;
-    line-height: 2;
+    line-height: 2.1;
     border: 1px double #cccccc;
+    height: 275px;
 }
 
 #headline {
-    margin-top: 5px;
-    margin-left: 225px;
-    margin-right: 225px;
+    margin: 10px 225px 5px 225px;
     background-color: #f6f6f6;
-    border: 1px double #cccccc;
 }
 
+#mainpic {
+    float: left;
+}
 
 #info {
-    margin-left: 30px;
+    margin-top: 20px;
+    margin-left: 220px;
 }
 
 .p1 {
@@ -39,6 +40,7 @@ body {
     margin-top: 10px;
     margin-left: 225px;
     margin-right: 225px;
+    height: 120%;
     /*background-color: white;*/
     font-size: 14px;
     /*border: 1px double #cccccc;*/
@@ -48,3 +50,55 @@ body {
 h3 {
     margin-left: 225px;
 }
+
+
+div.ratingbox {
+    float: right;
+}
+
+div.topitems {
+    float: top;
+}
+
+div.ratingstars div.showscore {
+    padding: 0;
+    margin: 0;
+}
+
+div.ratingstars {
+    float: left;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+
+div.ratingpeople {
+    color: darkgray;
+    text-align: center;
+}
+
+div.showscore {
+    float: right;
+    margin-right: 20px;
+}
+
+div.getratingstar{
+    line-height: 1.5;
+    font-size: 16px;
+    margin-top: 50px;
+}
+
+div.getratingstar .btn {
+    background-color: #690;
+}
+
+div.getratingstar input:focus {
+    outline: none;
+    border: none;
+}
+
+div.getratingstar .btn:hover {
+    background-color: #060;
+}
+
+
+

@@ -10,11 +10,10 @@ nname = [""]
 
 app = Flask(__name__)
 
-
 @app.route('/')
 def index():
-    return render_template('startest.html')
-    # return render_template('index.html', genrelist=db.genredb.keys())
+    # return render_template('startest.html')
+    return render_template('index.html', genrelist=db.genredb.keys())
 
 
 @app.route('/searchresult', methods=['POST', 'GET'])
@@ -85,7 +84,7 @@ def searchresult(nowname=['']):
     return render_template('searchresult.html', pagename=nowname, paginate=paginate, data=data, genrelist=db.genredb.keys())
 
 
-@app.route('/ranklist/<name>', methods=['GET'])
+@app.route('/ranklist/<name>', methods=['GET', 'POST'])
 def ranklist(name=[]):
     data_list = []
     namem = request.args.get('name', None)
@@ -111,14 +110,24 @@ def ranklist(name=[]):
     return render_template('ranklist.html', pagename=name, paginate=paginate, data=data, genrelist=db.genredb.keys())
 
 
-@app.route('/details/<name>')
-def details(name):
+@app.route('/details/<name>', methods=['POST', 'GET'])
+def details(name, flag=False):
+    print(flag)
+    if request.method == 'POST' and flag is False:
+        score = float(request.form['getrating']) * 2
+        print(score)
+        if score:
+            db.film_score(db.get_film_by_exact_name(name)[0], score)
+            db.save_database()
+        return redirect(url_for('details', name=name, flag=True))
     film = db.get_film_by_exact_name(name)[0]
     db.film_click(film)
     data = {}
     data['imgpath'] = '/img/filmimage/' + str(film.id) + '.jpg'
     data['film'] = film
     return render_template('details.html', data=data, genrelist=db.genredb.keys())
+
+
 
 
 if __name__ == '__main__':

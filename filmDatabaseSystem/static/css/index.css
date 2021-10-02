@@ -5,3 +5,36 @@ body {
     background-color: #f6f6f6;
     overflow-y: scroll;
 }
+
+.imgbox {
+    height: 200px;
+    margin: 40px 225px;
+    display: flex;
+    align-items: center;
+    background-color: #303841;
+    border-radius: 18px;
+    border: 2px solid gray;
+}
+
+#readme {
+    margin: 50px 225px;
+    background-color: white;
+    line-height: 2;
+    font-size: 20px;
+    border: 1px double #cccccc;
+    padding: 10px;
+}
+
+#readme li{
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+#img1 {
+    margin-top: 10px;
+    margin-left: 100px;
+}
+
+#img2 {
+    margin-left: 130px;
+}

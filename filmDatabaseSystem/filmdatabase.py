@@ -6,6 +6,8 @@ from fuzzywuzzy import fuzz
 from binarysearch.binarySearch import *
 import pickle
 from film import Film
+import string
+import zhon.hanzi
 
 
 class FilmDatabase(object):
@@ -17,14 +19,23 @@ class FilmDatabase(object):
         self.persondb = None
         self.genredb = None
 
+    @staticmethod
+    def remove_all_punc(s):
+        for i in string.punctuation:
+            s = s.replace(i, '')
+        for i in zhon.hanzi.punctuation:
+            s = s.replace(i, '')
+        return s
+
     def get_film_by_exact_name(self, name):
         res = self.database[name]
         return res
 
     def get_film_by_part_name(self, name):
         res = []
+        name = self.remove_all_punc(name)
         for k, v in self.database.items():
-            if name in k:
+            if name in self.remove_all_punc(k):
                 res.append(k)
         return res
 
@@ -47,8 +58,9 @@ class FilmDatabase(object):
 
     def get_film_by_part_person_name(self, name):
         res = []
+        name = self.remove_all_punc(name)
         for k, v in self.persondb.items():
-            if name in k:
+            if name in self.remove_all_punc(k):
                 res.append(k)
         return res
 
@@ -114,9 +126,9 @@ class FilmDatabase(object):
         self.save_database()
 
     def film_score(self, film: Film, newscore:float):
-        old_score=film.score
+        old_score = film.score
         film.judge_score(newscore)
-        new_score=film.score
+        new_score = film.score
         def change(flist: list, name, score:float, newscore:float):
             upper = upper_bound(flist, newscore, key=lambda x: x[1])
             flist.insert(upper, [name, round(float(newscore), 1)])
@@ -145,17 +157,27 @@ class FilmDatabase(object):
         self.scoreranklist = res
 
 
-if __name__ == '__main__':
-    db = FilmDatabase()
-    db.load_database()
 
-    db.save_database()
-    db.resetscore()
-    print(db.scoreranklist)
+
+
+if __name__ == '__main__':
+    # db = FilmDatabase()
+    # db.load_database()
+    #
+    # db.save_database()
     # db.resetscore()
     # print(db.scoreranklist)
-    db.film_score(db.get_film_by_exact_name('小丑')[0], 8.0)
-    print(db.scoreranklist)
+    # # db.resetscore()
+    # # print(db.scoreranklist)
+    # db.film_score(db.get_film_by_exact_name('小丑')[0], 7.0)
+    # print(db.scoreranklist)
+    # print(db.get_film_by_exact_name('小丑')[0].score)
+    # db.save_database()
+    i = 0
+    while i <= 5:
+        print('%.1f: "%.1f"' % (i, 2 * i), end=', ')
+        i += 0.5
+
 
     # print(db.database.values()[1].score)
     # for d in db.database.values():

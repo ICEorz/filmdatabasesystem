@@ -70,7 +70,7 @@ img {
 #searchbutton {
     height: 28px;
     width: 28px;
-    background: url(../image/search.jpg) left center no-repeat;
+    background: url(../img/search.jpg) left center no-repeat;
     background-size: 80% 80%;
     float: right;
     border: none;

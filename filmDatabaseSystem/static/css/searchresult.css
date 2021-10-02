@@ -44,13 +44,21 @@ ul.pagination li a:hover:not(.active) {
 }
 
 .filmbox {
-    display: flex;
-    align-items: center;
+    height: 190px;
+}
+
+.filmimg {
+    float: left;
+}
+
+.topitems {
+    float: right;
 }
 
 .filminfo {
-    margin-left: 30px;
-    line-height: 1.9;
+    padding-top: 10px;
+    margin-left: 150px;
+    line-height: 2;
 }
 
 #pageinfo {
@@ -69,4 +77,34 @@ ul.pagination li a:hover:not(.active) {
 .personinfo span {
     margin-left: 10px;
     margin-top: 10px;
+}
+
+div.ratingbox {
+    float: right;
+}
+
+div.topitems {
+    float: top;
+}
+
+div.ratingstars div.showscore {
+    padding: 0;
+    margin: 0;
+}
+
+div.ratingstars {
+    float: left;
+    margin-top: 20px;
+    margin-right: 5px;
+}
+
+div.ratingpeople {
+    color: darkgray;
+    text-align: center;
+}
+
+div.showscore {
+    float: right;
+    margin-right: 21px;
+    margin-top: 0;
 }

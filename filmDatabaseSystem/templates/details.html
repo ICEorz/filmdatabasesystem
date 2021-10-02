@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>FilmDbSys-details</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/details.css') }}" />
-
+    <link rel="icon" href="/static/img/icon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
-
     <link rel="stylesheet" href="/static/css/star-rating.css" media="all" type="text/css"/>
-
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/details.css') }}" />
     <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/star-rating.js') }}"></script>
@@ -71,6 +69,30 @@
     <div id="detailsinfo">
         <div id="mainpic">
             <img alt="{{ data.film.name }}" src="{{ url_for('static', filename=data.imgpath) }}" height="275"/>
+        </div>
+        <div class="ratingbox">
+            <div class="topitems">
+                <div class="ratingstars">
+                    <input id="ratinginfo" name="input-1" class="rating-loading" value="{{ data.film.score/2 }}" data-step="0.5" data-theme="krajee-gly">
+                </div>
+                <div class="showscore">
+                    {% if data.film.score %}
+                        <h2><b>{{ '%.1f' % data.film.score }}</b></h2>
+                    {% else %}
+                        <h2><b>暂无评分</b></h2>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="ratingpeople">
+                {{ data.film.espeople }}人评过
+            </div>
+            <div class="getratingstar">
+                <div class="judgetext"><b>评分：</b></div>
+                <form action="{{ url_for('details', name=data.film.name, flag=True) }}" method="POST">
+                        <input id="getrating" name="getrating" required class="rating-loading" data-theme="krajee-gly" data-min="0" data-max="5" value="0" onsubmit="return dosubmit()">
+                        <button type="submit" class="btn btn-primary">确认</button>
+                </form>
+            </div>
         </div>
         <div id="info">
             <span>
@@ -144,18 +166,7 @@
                     {{ data.film.click }}
                 </span>
             </span>
-            <br>
         </div>
-        <ul>
-            <li>
-                <input id="ratinginfo" name="input-1" class="rating-loading" value="{{ data.film.score }}" data-step="0.5" data-theme="krajee-gly">
-            </li>
-            <li>
-                <form action="details" "  post">
-
-                </form>
-            </li>
-        </ul>
     </div>
     <div id="summaryhead">
         <h3>剧情简介：</h3>
@@ -164,9 +175,21 @@
         {{ data.film.detailed_info }}
     </div>
 </body>
-<script>
+    <script>
         $(document).ready(function(){
-            $('#ratinginfo').rating({displayOnly: true, step:0.5});
+            $('#ratinginfo').rating({
+                displayOnly: true,
+                clearCaption: "暂无评分",
+                showCaption: false,
+                size: "sm"
+            });
+            $('#getrating').rating({
+                step: 0.5,
+                size: "sm",
+                clearCaption: "0.0",
+                showClear: false,
+                starCaptions: {0.5: "1.0", 1.0: "2.0", 1.5: "3.0", 2.0: "4.0", 2.5: "5.0", 3.0: "6.0", 3.5: "7.0", 4.0: "8.0", 4.5: "9.0", 5.0: "10.0"},
+            });
         });
     </script>
 </html>
