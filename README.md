@@ -22,7 +22,7 @@
 
 - Search can be precise search, partial search and fuzzy search
 
--The corresponding type can be selected in the type option of the navigation bar
+- The corresponding type can be selected in the type option of the navigation bar
 
 - In the leaderboard option in the navigation bar, you can view the click through leaderboard and scoring leaderboard
 
