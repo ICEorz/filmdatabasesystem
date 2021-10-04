@@ -112,10 +112,10 @@ def ranklist(name=[]):
 
 @app.route('/details/<name>', methods=['POST', 'GET'])
 def details(name, flag=False):
-    print(flag)
+    # print(flag)
     if request.method == 'POST' and flag is False:
         score = float(request.form['getrating']) * 2
-        print(score)
+        # print(score)
         if score:
             db.film_score(db.get_film_by_exact_name(name)[0], score)
             db.save_database()

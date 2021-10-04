@@ -100,5 +100,9 @@ div.getratingstar .btn:hover {
     background-color: #060;
 }
 
+div:focus {
+    outline: none;
+}
+
 
 

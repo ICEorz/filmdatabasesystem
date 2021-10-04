@@ -21,6 +21,7 @@ class Film(object):
         self.id = id
         self.score = score
         self.espeople = espeople
+        self.comments = []
 
     def __str__(self):
         return ("电影名：" + self.name + '\n'

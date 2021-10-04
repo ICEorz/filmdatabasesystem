@@ -8,6 +8,7 @@ import pickle
 from film import Film
 import string
 import zhon.hanzi
+from kmp.kmp import kmp
 
 
 class FilmDatabase(object):
@@ -35,7 +36,7 @@ class FilmDatabase(object):
         res = []
         name = self.remove_all_punc(name)
         for k, v in self.database.items():
-            if name in self.remove_all_punc(k):
+            if kmp(self.remove_all_punc(k), name):
                 res.append(k)
         return res
 
@@ -60,7 +61,7 @@ class FilmDatabase(object):
         res = []
         name = self.remove_all_punc(name)
         for k, v in self.persondb.items():
-            if name in self.remove_all_punc(k):
+            if kmp(self.remove_all_punc(k), name):
                 res.append(k)
         return res
 
@@ -157,13 +158,12 @@ class FilmDatabase(object):
         self.scoreranklist = res
 
 
-
-
-
 if __name__ == '__main__':
-    # db = FilmDatabase()
-    # db.load_database()
-    #
+    db = FilmDatabase()
+    db.load_database()
+    for k, v in db.database.items():
+        if '小说' in v[0].detailed_info and '改编' in v[0].detailed_info:
+            print(k, v[0].detailed_info)
     # db.save_database()
     # db.resetscore()
     # print(db.scoreranklist)
@@ -173,10 +173,7 @@ if __name__ == '__main__':
     # print(db.scoreranklist)
     # print(db.get_film_by_exact_name('小丑')[0].score)
     # db.save_database()
-    i = 0
-    while i <= 5:
-        print('%.1f: "%.1f"' % (i, 2 * i), end=', ')
-        i += 0.5
+
 
 
     # print(db.database.values()[1].score)
