@@ -107,8 +107,6 @@ def ranklist(name=[]):
     data_list = []
     namem = request.args.get('name', None)
     page = request.args.get('page', 1, type=int)
-    print(page)
-    print(name)
     if namem:
         name = [namem]
 
@@ -129,23 +127,48 @@ def ranklist(name=[]):
     data = paginate.items
     return render_template('ranklist.html', pagename=name, paginate=paginate, data=data, genrelist=db.genredb.keys())
 
+@app.route('/famous/<name>', methods=['GET', 'POST'])
+def famous(name=[]):
+    data_list = []
+    namem = request.args.get('name', None)
+    page = request.args.get('page', 1, type=int)
+    if namem:
+        name = [namem]
+
+    db.get_famous()
+    for i in db.famouslist:
+        data_list.append(db.database[i])
+    # pagination
+    limit = 10
+    start = (page - 1) * limit
+    end = page * limit if len(data_list) > page * limit else len(data_list)
+
+    paginate = Pagination(data_list, page, per_page=10, total=len(data_list), items=data_list[start:end])
+    data = paginate.items
+    return render_template('ranklist.html', pagename=name, paginate=paginate, data=data, genrelist=db.genredb.keys())
+
 
 @app.route('/details/<id>', methods=['POST', 'GET'])
 def details(id, flag=False):
     # print(flag)
     id = int(id)
     if request.method == 'POST' and flag is False:
-        score = float(request.form['getrating']) * 2
-        # print(score)
-        if score:
-            db.database[id].judge_score(score)
-            # db.save_database()
-        return redirect(url_for('details', id=id, flag=True))
+        if 'getrating' in request.form.keys():
+            score = float(request.form['getrating']) * 2
+            # print(score)
+            if score:
+                db.database[id].judge_score(score)
+                # db.save_database()
+            return redirect(url_for('details', id=id, flag=True))
+        else:
+            db.database[id].comments.insert(0, request.form['newcomment'])
+            return redirect(url_for('details', id=id, flag=True))
     film = db.database[id]
     db.database[id].add_click()
     # db.save_database()
     data = dict()
     data['film'] = film
+    print(film.imdb)
     return render_template('details.html', data=data, genrelist=db.genredb.keys())
 
 

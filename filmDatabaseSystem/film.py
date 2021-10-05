@@ -35,7 +35,7 @@ class Film(object):
                 + "编剧：" + " ".join(e for e in self.author) + '\n'
                 + "类型：" + " ".join(e for e in self.genre) + '\n'
                 + "演员：" + " ".join(e for e in self.actor) + '\n'
-                + "上映日期：" + " ".join(e for e in self.date) + '\n'
+                + "上映日期：" + self.date + '\n'
                 + "简介：" + self.detailed_info + '\n'
                 + "点击量：" + str(self.click) + '\n'
                 + "keyid=" + str(self.keyid) + '\n'

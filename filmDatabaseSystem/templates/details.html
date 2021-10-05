@@ -52,6 +52,7 @@
                         </ul>
                     </div>
                 </li>
+                <li class="naviitem"><a href="{{ url_for('famous', name='famousadapt') }}" class="navia">名著改编</a></li>
                 <li class="naviitem">
                     <div id="searchbox">
                         <form action="{{ url_for('searchresult') }}" method="POST" autocomplete="off">
@@ -69,7 +70,7 @@
     </div>
     <div id="detailsinfo">
         <div id="mainpic">
-            <img alt="{{ data.film.name }}" src="{{ data.film.img }}" height="275"/>
+            <img alt="{{ data.film.name }}" src="{{ data.film.img }}" height="325"/>
         </div>
         <div class="ratingbox">
             <div class="topitems">
@@ -156,7 +157,25 @@
                 <span class="p1">IMDb</span>
                 :
                 <span class="infoitem">
-                    {{ data.film.id }}
+                    <a href="{{ data.film.imdb }}">{{ data.film.imdb }}</a>
+                </span>
+            </span>
+            <br>
+            <span>
+                <span class="p1">时长</span>
+                :
+                <span class="infoitem">
+                    {{ data.film.time }}分钟
+                </span>
+            </span>
+            <br>
+            <span>
+                <span class="p1">国家/地区</span>
+                :
+                <span class="infoitem">
+                    {% for d in data.film.region %}
+                    {{ d }}&nbsp;
+                    {% endfor %}
                 </span>
             </span>
             <br>
@@ -174,6 +193,29 @@
     </div>
     <div id="summary">
         {{ data.film.detailed_info }}
+    </div>
+    <div id="addcomments">
+        <form action="{{ url_for('details', id=data.film.keyid, flag=True) }}" method="POST">
+            <textarea id="commentarea" name="newcomment" rows="5" cols="145" placeholder="说点什么吧..." style="resize: none"></textarea>
+            <br>
+            <input type="submit" value="发表评论">
+        </form>
+    </div>
+    <div id="comments">
+        <b>评论：</b>
+        <br>
+        {% if data.film.comments|length == 0 %}
+        暂无评论
+        {% else %}
+        {% for d in data.film.comments %}
+            <div class="commentitem">
+                <img src="/static/img/unknowperson.jpg" width="100px">
+                <div class="commenttext">{{ d }}</div>
+            </div>
+            <br>
+            <br>
+        {% endfor %}
+        {% endif %}
     </div>
 </body>
     <script>

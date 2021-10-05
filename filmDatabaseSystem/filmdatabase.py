@@ -22,6 +22,7 @@ class FilmDatabase(object):
         self.filmdb = None
         self.persondb = None
         self.genredb = None
+        self.famouslist = None
 
     @staticmethod
     def remove_all_punc(s):
@@ -227,7 +228,7 @@ class FilmDatabase(object):
             tmp['region'] = data.region
             tmp['time'] = data.time
             tmp['douban'] = data.douban
-            tmp['imdb'] = data.douban
+            tmp['imdb'] = data.imdb
             tmp['img'] = data.img
             tmp['click'] = data.click
             tmp['keyid'] = data.keyid
@@ -291,6 +292,13 @@ class FilmDatabase(object):
         quick_sort(res, 0, len(res) - 1, key=lambda t: t[1])
         self.scoreranklist = res
 
+    def get_famous(self):
+        res = []
+        for d in self.database:
+            if '改编' in d.detailed_info:
+                res.append(d.keyid)
+        self.famouslist = res
+
 
 if __name__ == '__main__':
     def reset_db():
@@ -314,6 +322,8 @@ if __name__ == '__main__':
                     return True
             return False
 
+        strss = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
         for data in db.database:
             data.actor = data.actor[:5]
             if data.director == ['null']:
@@ -322,7 +332,7 @@ if __name__ == '__main__':
                 data.director = ['暂无编剧信息']
             if data.actor == ['null']:
                 data.actor = ['暂无演员信息']
-            if data.detailed_info == 'null' or data.detailed_info is None or not is_Chinese(data.detailed_info[0]):
+            if data.detailed_info == 'null' or data.detailed_info is None or (not is_Chinese(data.detailed_info[0]) and data.detailed_info[0] not in strss):
                 data.detailed_info = '暂无简介'
             if data.date == 'null':
                 data.date = '暂无上映日期'
@@ -340,13 +350,32 @@ if __name__ == '__main__':
         db.clear_score_and_click()
         db.save_database()
 
-    db = FilmDatabase()
-    db.load_database()
-    db.create_database()
+        print(db.database[0].imdb)
+    reset_db()
 
-    for d in db.database:
-        if '改编' in d.detailed_info:
-            print(d.name)
+    # db = FilmDatabase()
+    # db.load_dataset()
+    # db.create_database()
+    # print(db.database[0].imdb)
+    # def famousadapt():
+    #     strss = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    #     db = FilmDatabase()
+    #     db.load_dataset()
+    #     db.create_database()
+    #     print(db.database[0].detailed_info[0] in strss)
+
+        # for d in db.database:
+        #     if '改编' in d.detailed_info:
+        #         print(d.name)
+
+
+    # db = FilmDatabase()
+    # db.load_dataset()
+    # db.create_database()
+    # db.save_database()
+    # print(db.database[0])
+
+    # reset_db()
     # s = db.get_film_by_exact_name('小王子')
     # for i in s:
     #     print(i.img)
