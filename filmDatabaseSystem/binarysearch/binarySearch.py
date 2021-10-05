@@ -23,7 +23,9 @@ def upper_bound(flist, x, l=0, r=None, key=lambda t: t):
 
 
 if __name__ == '__main__':
-    a = range(29)
+    li = [1, 1, 2, 2, 3, 3, 4]
+    print(li.index(2, 3))
 
-    print(lower_bound(a, 0, len(a) - 1, 16))
-    print(upper_bound(a, 0, len(a) - 1, 30))
+
+    # print(lower_bound(a, 0, len(a) - 1, 16))
+    # print(upper_bound(a, 0, len(a) - 1, 30))

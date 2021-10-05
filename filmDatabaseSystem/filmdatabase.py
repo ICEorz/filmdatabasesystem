@@ -8,7 +8,9 @@ import pickle
 from film import Film
 import string
 import zhon.hanzi
-from kmp.kmp import kmp
+from kmp.kmp import *
+import json
+from quicksort.quicksort import quick_sort
 
 
 class FilmDatabase(object):
@@ -17,6 +19,7 @@ class FilmDatabase(object):
         self.clickranklist = None
         self.scoreranklist = None
         self.modify_flag = False
+        self.filmdb = None
         self.persondb = None
         self.genredb = None
 
@@ -28,15 +31,27 @@ class FilmDatabase(object):
             s = s.replace(i, '')
         return s
 
+    # def key_to_val(self, res: list):
+    #     rl = []
+    #     for idx in res:
+    #         rl.append(self.database[idx])
+    #     return rl
+
     def get_film_by_exact_name(self, name):
-        res = self.database[name]
-        return res
+        res = self.filmdb[name]
+        if res is None:
+            return None
+        else:
+            return res
 
     def get_film_by_part_name(self, name):
         res = []
         name = self.remove_all_punc(name)
-        for k, v in self.database.items():
-            if kmp(self.remove_all_punc(k), name):
+        nexti = get_next(name)
+        for k in self.filmdb.keys():
+            if self.remove_all_punc(k) == name:
+                res.insert(0, k)
+            elif kmp(self.remove_all_punc(k), name, nexti):
                 res.append(k)
         return res
 
@@ -44,7 +59,7 @@ class FilmDatabase(object):
         def strcmp(a, b):
             return fuzz.ratio(a, name) <= fuzz.ratio(b, name)
         mh = maxheap.MaxHeap(maxsize=len(self.database), cmp=strcmp)
-        for k, v in self.database.items():
+        for k in self.filmdb.keys():
             mh.push(k)
         res = []
         for i in range(30):
@@ -55,23 +70,31 @@ class FilmDatabase(object):
         return res
 
     def get_film_by_person_name(self, name):
-        return self.persondb[name]
+        res = self.persondb[name]
+        if res is None:
+            return None
+        else:
+            return res
 
     def get_film_by_part_person_name(self, name):
-        res = []
+        res = list()
         name = self.remove_all_punc(name)
-        for k, v in self.persondb.items():
-            if kmp(self.remove_all_punc(k), name):
+        nexti = get_next(name)
+        for k in self.persondb.keys():
+            if self.remove_all_punc(k) == name:
+                res.insert(0, k)
+            elif kmp(self.remove_all_punc(k), name, nexti):
                 res.append(k)
         return res
 
     def get_film_by_fuzz_person_name(self, name):
+
         def strcmp(a, b):
             return fuzz.ratio(a, name) <= fuzz.ratio(b, name)
         mh = maxheap.MaxHeap(maxsize=len(self.database), cmp=strcmp)
-        for k, v in self.persondb.items():
+        for k in self.persondb.keys():
             mh.push(k)
-        res = []
+        res = list()
         for i in range(30):
             if len(mh):
                 res.append(mh.pop())
@@ -80,7 +103,11 @@ class FilmDatabase(object):
         return res
 
     def get_film_by_genre_name(self, name):
-        return self.genredb[name]
+        filmres = self.genredb[name]
+        if filmres is None:
+            return None
+        else:
+            return filmres
 
     def get_filmclickranklist(self):
         return self.clickranklist[-2:0:-1]
@@ -88,82 +115,248 @@ class FilmDatabase(object):
     def get_filmscoreranklist(self):
         return self.scoreranklist[-2:0:-1]
 
+    def load_dataset(self):
+        with open('./dataset/dataset.json', 'r') as f:
+            database = list()
+            diclist = json.load(f)
+            for i, data in enumerate(diclist):
+                database.append(
+                    Film(
+                        name=data['name'],
+                        director=data['director'],
+                        author=data['author'],
+                        actor=data['actor'],
+                        genre=data['genre'],
+                        date=data['date'],
+                        detailed_info=data['detailed_info'],
+                        region=data['region'],
+                        time=data['time'],
+                        douban=data['douban'],
+                        imdb=data['imdb'],
+                        img=data['img'],
+                        click=0,
+                        keyid=int(i),
+                        score=0,
+                        espeople=0,
+                        comments=[]
+                    )
+                )
+            self.database = database
+
     def load_database(self):
-        with open('./database/namedb.pkl', 'rb') as f:
-            self.database = pickle.loads(f.read())
-        with open('./database/clickranklist.pkl', 'rb') as f:
-            self.clickranklist = pickle.loads(f.read())
+        with open('./database/database.json', 'r') as f:
+            database = list()
+            diclist = json.load(f)
+            for i, data in enumerate(diclist):
+                database.append(
+                    Film(
+                        name=data['name'],
+                        director=data['director'],
+                        author=data['author'],
+                        actor=data['actor'],
+                        genre=data['genre'],
+                        date=data['date'],
+                        detailed_info=data['detailed_info'],
+                        region=data['region'],
+                        time=data['time'],
+                        douban=data['douban'],
+                        imdb=data['imdb'],
+                        img=data['img'],
+                        click=data['click'],
+                        keyid=data['keyid'],
+                        score=data['score'],
+                        espeople=data['espeople'],
+                        comments=data['comments']
+                    )
+                )
+            self.database = database
+
+    def create_database(self):
+        self.filmdb = BPlusTree(50)
+        self.persondb = BPlusTree(50)
+        self.genredb = BPlusTree(50)
+        for i, data in enumerate(self.database):
+            self.filmdb.insert(data.name, i)
+            for person in set(data.director + data.author + data.director):
+                self.persondb.insert(person, i)
+            for genre in data.genre:
+                self.genredb.insert(genre, i)
+        self.resetclick()
+        self.resetscore()
+
+    def load_index(self):
+        with open('./database/filmdb.pkl', 'rb') as f:
+            self.filmdb = pickle.loads(f.read())
         with open('./database/persondb.pkl', 'rb') as f:
             self.persondb = pickle.loads(f.read())
         with open('./database/genredb.pkl', 'rb') as f:
             self.genredb = pickle.loads(f.read())
-        with open('./database/scoreranklist.pkl', 'rb') as f:
-            self.scoreranklist = pickle.loads(f.read())
 
-    def save_database(self):
-        with open('./database/namedb.pkl', 'wb') as f:
-            f.write(pickle.dumps(self.database))
+    def save_index(self):
+        with open('./database/filmdb.pkl', 'wb') as f:
+            f.write(pickle.dumps(self.filmdb))
         with open('./database/persondb.pkl', 'wb') as f:
             f.write(pickle.dumps(self.persondb))
         with open('./database/genredb.pkl', 'wb') as f:
             f.write(pickle.dumps(self.genredb))
+
+    def save_ranklist(self):
         with open('./database/clickranklist.pkl', 'wb') as f:
             f.write(pickle.dumps(self.clickranklist))
         with open('./database/scoreranklist.pkl', 'wb') as f:
             f.write(pickle.dumps(self.scoreranklist))
 
-    def film_click(self, film: Film):
-        def change(flist: list, name, click):
-            upper = upper_bound(flist, click, key=lambda x: x[1])
-            lower = lower_bound(flist, click, key=lambda x: x[1])
-            now_pos = flist.index([name, click])
-            flist[now_pos][1] += 1
-            if now_pos == upper - 1:
-                return
-            else:
-                flist[now_pos], flist[upper-1] = flist[upper-1], flist[now_pos]
-        change(self.clickranklist, film.name, film.click)
-        film.add_click()
+    def clear_score_and_click(self):
+        for data in self.database:
+            data.click = 0
+            data.score = 0
+            data.espeople = 0
         self.save_database()
 
-    def film_score(self, film: Film, newscore:float):
-        old_score = film.score
-        film.judge_score(newscore)
-        new_score = film.score
-        def change(flist: list, name, score:float, newscore:float):
-            upper = upper_bound(flist, newscore, key=lambda x: x[1])
-            flist.insert(upper, [name, round(float(newscore), 1)])
-            now_pos = flist.index([name, round(float(score), 1)])
-            flist.pop(now_pos)
-        change(self.scoreranklist, film.name, old_score, new_score)
-        self.save_database()
+    def save_database(self):
+        save_list = []
+        for data in self.database:
+            tmp = dict()
+            tmp['name'] = data.name
+            tmp['director'] = data.director
+            tmp['author'] = data.author
+            tmp['actor'] = data.actor
+            tmp['genre'] = data.genre
+            tmp['date'] = data.date
+            tmp['detailed_info'] = data.detailed_info
+            tmp['region'] = data.region
+            tmp['time'] = data.time
+            tmp['douban'] = data.douban
+            tmp['imdb'] = data.douban
+            tmp['img'] = data.img
+            tmp['click'] = data.click
+            tmp['keyid'] = data.keyid
+            tmp['score'] = data.score
+            tmp['espeople'] = data.espeople
+            tmp['comments'] = data.comments
+            save_list.append(tmp)
+        with open('./database/database.json', 'w') as f:
+            json.dump(save_list, f)
 
+    # def film_click(self, filmid: int):
+    #     film = self.database[filmid]
+    #
+    #     def change(flist: list, id, click):
+    #         upper = upper_bound(flist, click, key=lambda x: x[1])
+    #         lower = lower_bound(flist, click, key=lambda x: x[1])
+    #         now_pos = flist.index([id, click], lower)
+    #         flist[now_pos][1] += 1
+    #         if now_pos == upper - 1:
+    #             return
+    #         else:
+    #             flist[now_pos], flist[upper-1] = flist[upper-1], flist[now_pos]
+    #
+    #     change(self.clickranklist, filmid, film.click)
+    #     film.add_click()
+    #     self.save_database()
+    #     self.save_ranklist()
+
+    # def film_score(self, filmid: int, newscore:float):
+    #     film = self.database[filmid]
+    #     old_score = film.score
+    #     film.judge_score(newscore)
+    #     new_score = film.score
+    #
+    #     def change(flist: list, id, score: float, newscore: float):
+    #         lower = lower_bound(flist, score, key=lambda x: x[1])
+    #         now_pos = flist.index([id, round(float(score), 1)], lower)
+    #         flist.pop(now_pos)
+    #         upper = upper_bound(flist, newscore, key=lambda x: x[1])
+    #         flist.insert(upper, [id, round(float(newscore), 1)])
+    #
+    #     change(self.scoreranklist, filmid, old_score, new_score)
+    #     self.save_database()
+    #     self.save_ranklist()
 
     def resetclick(self):
-        res = []
+        res = list()
         res.append(['head', -float('inf')])
         res.append(['tail', float('inf')])
-        for k, v in self.database.items():
-            res.append([k, v[0].click])
-        res = sorted(res, key=lambda t: t[1])
+        for data in self.database:
+            res.append([data.keyid, data.click])
+        quick_sort(res, 0, len(res) - 1, key=lambda t: t[1])
         self.clickranklist = res
 
     def resetscore(self):
-        res = []
+        res = list()
         res.append(['head', -float('inf')])
         res.append(['tail', float('inf')])
-        for k, v in self.database.items():
-            res.append([k, round(float(v[0].score), 1)])
-        res = sorted(res, key=lambda t: t[1])
+        for data in self.database:
+            res.append([data.keyid, round(float(data.score), 1)])
+        quick_sort(res, 0, len(res) - 1, key=lambda t: t[1])
         self.scoreranklist = res
 
 
 if __name__ == '__main__':
+    def reset_db():
+        db = FilmDatabase()
+        db.load_dataset()
+        db.create_database()
+        # db.load_database()
+        '''
+            director --list
+            author --list 
+            actor --list  
+            detailed_info --str 
+            date --str 
+            region --list 
+            time --str 暂无时长
+        '''
+
+        def is_Chinese(word):
+            for ch in word:
+                if '\u4e00' <= ch <= '\u9fff':
+                    return True
+            return False
+
+        for data in db.database:
+            data.actor = data.actor[:5]
+            if data.director == ['null']:
+                data.director = ['暂无导演信息']
+            if data.author == ['null']:
+                data.director = ['暂无编剧信息']
+            if data.actor == ['null']:
+                data.actor = ['暂无演员信息']
+            if data.detailed_info == 'null' or data.detailed_info is None or not is_Chinese(data.detailed_info[0]):
+                data.detailed_info = '暂无简介'
+            if data.date == 'null':
+                data.date = '暂无上映日期'
+            if data.region == ['null']:
+                data.region = ['暂无国家/地区']
+            if data.time == 'null':
+                data.time = '暂无时长'
+            if data.douban == 'null':
+                data.douban = None
+            if data.imdb == 'null':
+                data.imdb = None
+            #     print(data.name)
+            #     data.detailed_info = '暂无简介'
+        # print(db.database[0].name)
+        db.clear_score_and_click()
+        db.save_database()
+
     db = FilmDatabase()
     db.load_database()
-    for k, v in db.database.items():
-        if '小说' in v[0].detailed_info and '改编' in v[0].detailed_info:
-            print(k, v[0].detailed_info)
+    db.create_database()
+
+    for d in db.database:
+        if '改编' in d.detailed_info:
+            print(d.name)
+    # s = db.get_film_by_exact_name('小王子')
+    # for i in s:
+    #     print(i.img)
+    # print(db.database)
+    # for k in db.filmdb.keys():
+    #     print(k)
+
+    # for k, v in db.database.items():
+    #     if '小说' in v[0].detailed_info and '改编' in v[0].detailed_info:
+    #         print(k, v[0].detailed_info)
     # db.save_database()
     # db.resetscore()
     # print(db.scoreranklist)

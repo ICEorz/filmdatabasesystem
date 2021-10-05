@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
     <title>FilmDbSys-details</title>
     <link rel="icon" href="/static/img/icon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
@@ -68,7 +69,7 @@
     </div>
     <div id="detailsinfo">
         <div id="mainpic">
-            <img alt="{{ data.film.name }}" src="{{ url_for('static', filename=data.imgpath) }}" height="275"/>
+            <img alt="{{ data.film.name }}" src="{{ data.film.img }}" height="275"/>
         </div>
         <div class="ratingbox">
             <div class="topitems">
@@ -88,7 +89,7 @@
             </div>
             <div class="getratingstar">
                 <div class="judgetext"><b>评分：</b></div>
-                <form action="{{ url_for('details', name=data.film.name, flag=True) }}" method="POST">
+                <form action="{{ url_for('details', id=data.film.keyid, flag=True) }}" method="POST">
                         <input id="getrating" name="getrating" required class="rating-loading" data-theme="krajee-gly" data-min="0" data-max="5" value="0" onsubmit="return dosubmit()">
                         <button type="submit" class="btn btn-primary">确认</button>
                 </form>

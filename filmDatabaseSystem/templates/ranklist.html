@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
     <title>FilmDbSys-ranklist</title>
     <link rel="icon" href="/static/img/icon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
@@ -68,8 +69,8 @@
             <div class="rankinfo">
                 <div class="filmbox">
                     <div class="filmimg">
-                        <a href="{{ url_for('details', name=d.name) }}">
-                            <img src="/static/img/filmimage/{{ d.id }}.jpg" width="130" height="190">
+                        <a href="{{ url_for('details', id=d.keyid) }}">
+                            <img src="{{ d.img }}" width="130" height="190">
                         </a>
                     </div>
                     <div class="topitems">
@@ -85,7 +86,7 @@
                     </div>
 
                     <div class="filminfo">
-                        <span id="spanhead"><a href="{{ url_for('details', name=d.name) }}"><b>{{ d.name }}</b></a></span>
+                        <span id="spanhead"><a href="{{ url_for('details', id=d.keyid) }}"><b>{{ d.name }}</b></a></span>
                         <br>
                         <span>
                             <span class="p1">导演</span>

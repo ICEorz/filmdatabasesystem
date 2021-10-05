@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
     <title>FilmDbSys-searchresult</title>
     <link rel="icon" href="/static/img/icon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
@@ -80,8 +81,8 @@
                 <div class="searchinfo">
                     <div class="filmbox">
                         <div class="filmimg">
-                            <a href="{{ url_for('details', name=d[1].name) }}">
-                                <img src="/static/img/filmimage/{{ d[1].id }}.jpg" width="130" height="190">
+                            <a href="{{ url_for('details', id=d[1].keyid, flag=False) }}">
+                                <img src="{{ d[1].img }}" width="130" height="190">
                             </a>
                         </div>
                         <div class="topitems">
@@ -97,14 +98,14 @@
                         </div>
 
                         <div class="filminfo">
-                            <span id="spanhead"><a href="{{ url_for('details', name=d[1].name) }}"><b>{{ d[1].name }}</b></a></span>
+                            <span id="spanhead"><a href="{{ url_for('details', id=d[1].keyid) }}"><b>{{ d[1].name }}</b></a></span>
                             <br>
                             <span>
                                 <span class="p1">导演</span>
                                 :
                                 <span class="infoitem">
-                                    {% for s in d[1].director %}
-                                    {{ s }}
+                                    {% for i in range(5) %}
+                                    {{ d[1].director[i] }}
                                     {% endfor %}
                                 </span>
                             </span>
@@ -113,8 +114,8 @@
                                 <span class="p1">编剧</span>
                                 :
                                 <span class="infoitem">
-                                    {% for s in d[1].author %}
-                                    {{ s }}
+                                    {% for i in range(5) %}
+                                    {{ d[1].author[i] }}
                                     {% endfor %}
                                 </span>
                             </span>
@@ -123,8 +124,8 @@
                                 <span class="p1">主演</span>
                                 :
                                 <span class="infoitem">
-                                    {% for s in d[1].actor %}
-                                    {{ s }}
+                                    {% for i in range(5) %}
+                                    {{ d[1].actor[i] }}
                                     {% endfor %}
                                 </span>
                             </span>

@@ -35,6 +35,7 @@ ul.pagination li a:hover:not(.active) {
     margin-left: 225px;
     margin-right: 225px;
     margin-top: 50px;
+    text-overflow: ellipsis;
 }
 
 .searchinfo {

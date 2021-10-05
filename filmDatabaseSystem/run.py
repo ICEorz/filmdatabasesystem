@@ -3,12 +3,25 @@ from flask import *
 from film import Film
 from filmdatabase import FilmDatabase
 from flask_sqlalchemy import Pagination
+from flask_apscheduler import APScheduler
 
 db = FilmDatabase()
 db.load_database()
+db.create_database()
 nname = [""]
 
 app = Flask(__name__)
+app.config['SCHEDULER_API_ENABLED'] = True
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+
+
+@scheduler.task('interval', id='savedata', seconds=30)
+def save():
+    print('save success')
+    db.save_database()
+
 
 @app.route('/')
 def index():
@@ -30,49 +43,54 @@ def searchresult(nowname=['']):
     '''
         查找电影名
         查找人名
-        查找类型名
         部分电影名 + 部分人名
+        
+        查找类型名
+        
         模糊搜索电影名 + 人名
     '''
-    res_list = None
-
+    res_list = list()
+    filmflag = 0 # 标注从什么地方开始是人
     fname = nowname[0]
-    nameres = db.get_film_by_exact_name(fname)
-    if nameres:
-        res_list = [nameres[0].name]
+    nameres = db.get_film_by_exact_name(fname) # film list
+
+    genre_res = db.get_film_by_genre_name(fname)
+    # not empty
+    if genre_res:
+        res_list = genre_res
+        filmflag = len(res_list)
+    #empty -> personname
     else:
-        personres = db.get_film_by_person_name(fname)
-        if personres:
-            res_list = personres
+        person_res = db.get_film_by_person_name(fname)
+        # not empty
+        if person_res:
+            res_list = person_res
+            filmflag = len(res_list)
+        # empty -> film, part film, part person
         else:
-            genreres = db.get_film_by_genre_name(fname)
-            if genreres:
-                res_list = genreres
-            else:
-                partlist = db.get_film_by_part_name(fname) + db.get_film_by_part_person_name(fname)
-                if partlist:
-                    res_list = partlist
-                else:
-                    res_list = db.get_film_by_fuzz_name(fname) + db.get_film_by_fuzz_person_name(fname)
+            partname_res = db.get_film_by_part_name(fname)  # name
+            partperson_res = db.get_film_by_part_person_name(fname)  #name
+            for name in partname_res:
+                res_list += db.get_film_by_exact_name(name)
+            filmflag = len(res_list)
+            res_list += partperson_res
 
     # dataprocess
     data_list = []
-    for item in res_list:
-        if db.get_film_by_exact_name(item):
-            fm = db.get_film_by_exact_name(item)[0]
-            data_list.append(
-                [
-                    False,  # isperson
-                    fm,  # data
-                ]
-            )
-        else:
-            data_list.append(
-                [
-                    True,  # isperson
-                    item  # name
-                ]
-            )
+    for i in range(filmflag):
+        data_list.append(
+            [
+                False,  # isperson
+                db.database[res_list[i]]  # data
+            ]
+        )
+    for i in range(filmflag, len(res_list)):
+        data_list.append(
+            [
+                True,  # isperson
+                res_list[i]  # name
+            ]
+        )
     # pagination
     limit = 10
     start = (page - 1) * limit
@@ -95,11 +113,13 @@ def ranklist(name=[]):
         name = [namem]
 
     if name == 'score':
+        db.resetscore()
         for nm in db.get_filmscoreranklist():
-            data_list.append(db.get_film_by_exact_name(nm[0])[0])
+            data_list.append(db.database[nm[0]])
     else:
+        db.resetclick()
         for nm in db.get_filmclickranklist():
-            data_list.append(db.get_film_by_exact_name(nm[0])[0])
+            data_list.append(db.database[nm[0]])
     # pagination
     limit = 10
     start = (page - 1) * limit
@@ -110,25 +130,25 @@ def ranklist(name=[]):
     return render_template('ranklist.html', pagename=name, paginate=paginate, data=data, genrelist=db.genredb.keys())
 
 
-@app.route('/details/<name>', methods=['POST', 'GET'])
-def details(name, flag=False):
+@app.route('/details/<id>', methods=['POST', 'GET'])
+def details(id, flag=False):
     # print(flag)
+    id = int(id)
     if request.method == 'POST' and flag is False:
         score = float(request.form['getrating']) * 2
         # print(score)
         if score:
-            db.film_score(db.get_film_by_exact_name(name)[0], score)
-            db.save_database()
-        return redirect(url_for('details', name=name, flag=True))
-    film = db.get_film_by_exact_name(name)[0]
-    db.film_click(film)
-    data = {}
-    data['imgpath'] = '/img/filmimage/' + str(film.id) + '.jpg'
+            db.database[id].judge_score(score)
+            # db.save_database()
+        return redirect(url_for('details', id=id, flag=True))
+    film = db.database[id]
+    db.database[id].add_click()
+    # db.save_database()
+    data = dict()
     data['film'] = film
     return render_template('details.html', data=data, genrelist=db.genredb.keys())
 
 
-
-
 if __name__ == '__main__':
+    scheduler.start()
     app.run(debug=True)

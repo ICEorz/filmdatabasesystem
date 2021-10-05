@@ -15,10 +15,11 @@ def get_next(a):
     return nexti
 
 
-def kmp(s, p) -> bool:
+def kmp(s, p, nexti=None) -> bool:
     i = 0
     j = 0
-    nexti = get_next(p)
+    if not nexti:
+        nexti = get_next(p)
     while i < len(s) and j < len(p):
         if j == -1 or s[i] == p[j]:
             i += 1
