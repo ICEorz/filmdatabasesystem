@@ -38,3 +38,24 @@ body {
 #img2 {
     margin-left: 130px;
 }
+
+#popularhead {
+    margin: 20px 225px;
+    font-size: 20px;
+}
+
+#popular {
+    margin: 10px 225px;
+    background-color: white;
+    border: 1px double #cccccc;
+}
+
+.popularitem {
+    display: inline-block;
+    margin: 20px 28px;
+    text-align: center;
+}
+
+.popularitem img{
+    border: 1px solid black;
+}

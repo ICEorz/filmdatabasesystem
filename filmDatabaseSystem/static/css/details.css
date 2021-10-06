@@ -110,7 +110,7 @@ div:focus {
     margin-bottom: 30px;
 }
 
-#addcomments input {
+#addcomments button {
     height: 30px;
     width: 100px;
     border-radius: 4px;
@@ -120,7 +120,7 @@ div:focus {
     color: white;
 }
 
-#addcomments input:hover {
+#addcomments button:hover {
     background-color: #060;
 }
 
@@ -144,4 +144,19 @@ div:focus {
 .commenttext {
     margin-left: 130px;
     margin-top: 20px;
+}
+
+#recommend {
+    margin: 30px 225px;
+    align-items: center;
+}
+
+.recommenditem{
+    margin: 0 25px;
+    display: inline-block;
+    text-align: center;
+}
+
+#recommendhead {
+    margin: 10px 225px;
 }

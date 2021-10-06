@@ -70,11 +70,11 @@
             {% if d[0] %}
                 <div class="searchinfo">
                     <div class="personinfo">
-                        <a href="{{ url_for('searchresult', nowname=d[1]) }}">
+                        <a href="{{ url_for('searchresult', nowname=d[1], personflag=True) }}">
                             <img src="/static/img/unknowperson.jpg" width="140"/>
                         </a>
                         <span>
-                            <a href="{{ url_for('searchresult', nowname=d[1]) }}"><h4><b>{{ d[1] }}</b></h4></a>
+                            <a href="{{ url_for('searchresult', nowname=d[1], personflag=True) }}"><h4><b>{{ d[1] }}</b></h4></a>
                         </span>
                     </div>
                 </div>

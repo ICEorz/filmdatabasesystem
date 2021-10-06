@@ -78,3 +78,13 @@ if __name__ == '__main__':
             tmplist = sorted(tmplist, key=lambda x: x[1])
             simlist.append([tmplist[-1][0], tmplist[-2][0], tmplist[-3][0]])
     print(simlist)
+
+
+    def cos_dist(vec1, vec2):
+        """
+        :param vec1: 向量1
+        :param vec2: 向量2
+        :return: 返回两个向量的余弦相似度
+        """
+        dist1 = float(np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2)))
+        return dist1

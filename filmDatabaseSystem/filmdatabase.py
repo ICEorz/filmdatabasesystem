@@ -11,6 +11,7 @@ import zhon.hanzi
 from kmp.kmp import *
 import json
 from quicksort.quicksort import quick_sort
+import numpy as np
 
 
 class FilmDatabase(object):
@@ -299,6 +300,54 @@ class FilmDatabase(object):
                 res.append(d.keyid)
         self.famouslist = res
 
+    def film_recommand(self, film: Film, k):
+        simlist = []
+        for i in range(len(self.database)):
+            if i == film.keyid:
+                continue
+            else:
+                simlist.append(
+                    (i, film_similarity(film, self.database[i]))
+                )
+        quick_sort(simlist, 0, len(simlist) - 1, key=lambda t: t[1])
+        return simlist[-1-k:-1][::-1]
+
+
+def film_similarity(film1: Film, film2: Film):
+    director = list(set(film1.director + film2.director))
+    author = list(set(film1.author + film2.author))
+    actor = list(set(film1.actor + film2.actor))
+    genre = list(set(film1.genre + film2.genre))
+    lend, lenau, lenac, lenge = len(director), len(author), len(actor), len(genre)
+    vec1 = np.zeros(lend + lenau + lenac + lenge)
+    vec2 = np.zeros(lend + lenau + lenac + lenge)
+    for i in range(lend):
+        if director[i] in film1.director:
+            vec1[i] = 1
+        if director[i] in film2.director:
+            vec2[i] = 1
+    for i in range(lenau):
+        if author[i] in film1.author:
+            vec1[i + lend] = 1
+        if author[i] in film2.author:
+            vec2[i + lend] = 1
+    for i in range(lenac):
+        if actor[i] in film1.actor:
+            vec1[i + lend + lenau] = 1
+        if actor[i] in film2.actor:
+            vec2[i + lend + lenau] = 1
+    for i in range(lenge):
+        if genre[i] in film1.genre:
+            vec1[i + lend + lenau + lenac] = 1
+        if genre[i] in film2.genre:
+            vec2[i + lend + lenau + lenac] = 1
+    return cos_dist(vec1, vec2)
+
+
+def cos_dist(vec1, vec2):
+    dist1 = float(np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2)))
+    return dist1
+
 
 if __name__ == '__main__':
     def reset_db():
@@ -351,11 +400,20 @@ if __name__ == '__main__':
         db.save_database()
 
         print(db.database[0].imdb)
-    reset_db()
 
-    # db = FilmDatabase()
-    # db.load_dataset()
-    # db.create_database()
+
+    db = FilmDatabase()
+    db.load_database()
+    db.create_database()
+    print(db.database[256].img)
+    db.database[256].img = 'https://img2.doubanio.com/view/photo/s_ratio_poster/public/p1592298962.webp'
+    db.save_database()
+    # print(db.get_film_by_part_person_name('鲁伯特·哈维'))
+    # print(film_similarity(db.database[0], db.database[1]))
+    # tmp = db.film_recommand(db.database[0], 10)
+    # for data in tmp:
+    #     print(db.database[data[0]].name)
+
     # print(db.database[0].imdb)
     # def famousadapt():
     #     strss = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']

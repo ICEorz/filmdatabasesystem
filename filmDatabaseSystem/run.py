@@ -26,11 +26,17 @@ def save():
 @app.route('/')
 def index():
     # return render_template('startest.html')
-    return render_template('index.html', genrelist=db.genredb.keys())
+    data = {}
+    db.resetclick()
+    popular = []
+    for nm in db.get_filmclickranklist()[:5]:
+        popular.append(db.database[nm[0]])
+    data['popular'] = popular
+    return render_template('index.html', genrelist=db.genredb.keys(), data=data)
 
 
 @app.route('/searchresult', methods=['POST', 'GET'])
-def searchresult(nowname=['']):
+def searchresult(nowname=[''], personflag=False):
     if request.method == 'POST':
         res = request.form
         nowname = [res['Name']]
@@ -38,6 +44,7 @@ def searchresult(nowname=['']):
     else:
         namem = request.args.get('nowname', None)
         page = request.args.get('page', 1, type=int)
+        personflag = request.args.get('personflag', False, type=bool)
         if namem:
             nowname = [namem]
     '''
@@ -52,28 +59,30 @@ def searchresult(nowname=['']):
     res_list = list()
     filmflag = 0 # 标注从什么地方开始是人
     fname = nowname[0]
-    nameres = db.get_film_by_exact_name(fname) # film list
-
-    genre_res = db.get_film_by_genre_name(fname)
-    # not empty
-    if genre_res:
-        res_list = genre_res
+    if personflag:
+        res_list = db.get_film_by_person_name(fname)
         filmflag = len(res_list)
-    #empty -> personname
     else:
-        person_res = db.get_film_by_person_name(fname)
-        # not empty
-        if person_res:
-            res_list = person_res
+        genre_res = db.get_film_by_genre_name(fname)
+        if genre_res:
+            res_list = genre_res
             filmflag = len(res_list)
-        # empty -> film, part film, part person
         else:
             partname_res = db.get_film_by_part_name(fname)  # name
             partperson_res = db.get_film_by_part_person_name(fname)  #name
-            for name in partname_res:
-                res_list += db.get_film_by_exact_name(name)
-            filmflag = len(res_list)
-            res_list += partperson_res
+            print(partperson_res)
+            if len(partname_res) + len(partperson_res) != 0:
+                for name in partname_res:
+                    res_list += db.get_film_by_exact_name(name)
+                filmflag = len(res_list)
+                res_list += partperson_res
+            else:
+                fuzzname_res = db.get_film_by_fuzz_name(fname)
+                fuzzperson_res = db.get_film_by_fuzz_person_name(fname)
+                for name in fuzzname_res:
+                    res_list += db.get_film_by_exact_name(name)
+                filmflag = len(res_list)
+                res_list += fuzzperson_res
 
     # dataprocess
     data_list = []
@@ -165,9 +174,14 @@ def details(id, flag=False):
             return redirect(url_for('details', id=id, flag=True))
     film = db.database[id]
     db.database[id].add_click()
+    rec = db.film_recommand(film, 5)
+    recommend = []
+    for data in rec:
+        recommend.append(db.database[data[0]])
     # db.save_database()
     data = dict()
     data['film'] = film
+    data['recommend'] = recommend
     print(film.imdb)
     return render_template('details.html', data=data, genrelist=db.genredb.keys())
 

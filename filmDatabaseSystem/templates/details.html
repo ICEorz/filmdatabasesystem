@@ -57,7 +57,7 @@
                     <div id="searchbox">
                         <form action="{{ url_for('searchresult') }}" method="POST" autocomplete="off">
                             <input type="search" name="Name" id="searchinput" placeholder="搜索电影、影人、类型" />
-                            <button type="submit" id="searchbutton" />
+                            <button type="submit" id="searchbutton"></button>
                         </form>
                     </div>
                 </li>
@@ -198,8 +198,17 @@
         <form action="{{ url_for('details', id=data.film.keyid, flag=True) }}" method="POST">
             <textarea id="commentarea" name="newcomment" rows="5" cols="145" placeholder="说点什么吧..." style="resize: none"></textarea>
             <br>
-            <input type="submit" value="发表评论">
+            <button type="submit" class="btn btn-primary">发表评论</button>
         </form>
+    </div>
+    <div id="recommendhead"><b>猜你喜欢</b></div>
+    <div id="recommend">
+        {% for d in data.recommend %}
+            <div class="recommenditem">
+                <a href="{{ url_for('details', id=d.keyid) }}"><img src="{{ d.img }}" height="225"></a>
+                <a href="{{ url_for('details', id=d.keyid) }}" class="text">{{ d.name }}</a>
+            </div>
+        {% endfor %}
     </div>
     <div id="comments">
         <b>评论：</b>
@@ -209,7 +218,7 @@
         {% else %}
         {% for d in data.film.comments %}
             <div class="commentitem">
-                <img src="/static/img/unknowperson.jpg" width="100px">
+                <img src="/static/img/unknowperson.jpg" width="100" />
                 <div class="commenttext">{{ d }}</div>
             </div>
             <br>
