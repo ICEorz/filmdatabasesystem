@@ -136,6 +136,7 @@ def ranklist(name=[]):
     data = paginate.items
     return render_template('ranklist.html', pagename=name, paginate=paginate, data=data, genrelist=db.genredb.keys())
 
+
 @app.route('/famous/<name>', methods=['GET', 'POST'])
 def famous(name=[]):
     data_list = []

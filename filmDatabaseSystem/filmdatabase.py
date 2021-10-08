@@ -405,9 +405,15 @@ if __name__ == '__main__':
     db = FilmDatabase()
     db.load_database()
     db.create_database()
-    print(db.database[256].img)
-    db.database[256].img = 'https://img2.doubanio.com/view/photo/s_ratio_poster/public/p1592298962.webp'
+    # print(db.database[db.get_film_by_exact_name('怪兽电力公司')[0]].actor)
+    # print(db.database[98])
+    for data in db.database:
+        data.author = data.author[:5]
+    # db.database[98].img = 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2016401659.webp'
     db.save_database()
+    # print(db.database[3873])
+    #db.database[256].img = 'https://img2.doubanio.com/view/photo/s_ratio_poster/public/p1592298962.webp'
+    # db.save_database()
     # print(db.get_film_by_part_person_name('鲁伯特·哈维'))
     # print(film_similarity(db.database[0], db.database[1]))
     # tmp = db.film_recommand(db.database[0], 10)

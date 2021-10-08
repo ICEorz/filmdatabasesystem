@@ -155,6 +155,16 @@ div:focus {
     margin: 0 25px;
     display: inline-block;
     text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow:ellipsis;
+    width: 155px;
+}
+
+.recommenditem .text {
+    width: 155px;
+    height: 16px;
+    overflow: hidden;
 }
 
 #recommendhead {

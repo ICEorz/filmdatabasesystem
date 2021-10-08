@@ -66,7 +66,7 @@
         {% for d in data.popular %}
             <div class="popularitem">
                 <a href="{{ url_for('details', id=d.keyid) }}">
-                    <img src="{{ d.img }}" height="225"/>
+                    <img src="{{ d.img }}" height="225" width="150"/>
                 </a>
                 <a href="{{ url_for('details', id=d.keyid) }}">{{ d.name }}</a>
             </div>
