@@ -1,0 +1,77 @@
+
+html, body {
+    height: 100%;
+}
+
+.loginall {
+    height: 710px;
+    margin: 0 auto;
+    position: relative;
+    background-color: #f6f6f6;
+}
+
+img {
+    margin-top: 20px;
+}
+
+.loginbox {
+    border-radius: 10px;
+    width: 360px;
+    height: 400px;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /*overflow: visible;*/
+    margin-top: -200px;
+    margin-left: -180px;
+    text-align: center;
+    vertical-align: center;
+    border: 1px solid #f6ffff;
+}
+
+dd {
+    margin: 10px 0;
+    padding: 0;
+}
+
+dt {
+    margin: 10px 0;
+    padding: 0;
+}
+
+input {
+    border: 1px double gray;
+    border-radius: 4px;
+    height: 25px;
+    width: 200px;
+}
+
+.boxitem {
+    margin-top: 20px;
+    vertical-align: center;
+}
+
+.submitbtn {
+    height: 30px;
+    font-size: 16px;
+    margin-top: 10px;
+    color: white;
+    background-color: #690;
+    border-radius: 4px;
+}
+
+.errormsg {
+    margin: 10px 0;
+    color: red;
+    font-size: small;
+}
+
+.textitem {
+    color: gray;
+}
+
+.submitbtn:hover {
+    background-color: #060;
+
+}

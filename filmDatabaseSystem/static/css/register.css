@@ -1,0 +1,67 @@
+body, html {
+    height: 100%;
+}
+
+.registerall {
+    height: 710px;
+    margin: 0;
+    position: relative;
+    background-color: #f6f6f6;
+}
+
+img {
+    margin-top: 20px;
+}
+
+.registerbox {
+    border-radius: 10px;
+    width: 360px;
+    height: 400px;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /*overflow: visible;*/
+    margin-top: -200px;
+    margin-left: -180px;
+    text-align: center;
+    vertical-align: center;
+    border: 1px solid #f6f6f6;
+}
+
+form {
+    margin-top: 20px;
+}
+
+input {
+    margin: 10px 0;
+    border: 1px double gray;
+    border-radius: 4px;
+    height: 25px;
+    width: 200px;
+}
+
+.submitbtn {
+    width: 200px;
+    height: 30px;
+    font-size: 16px;
+    margin-top: 20px;
+    color: white;
+    background-color: #690;
+    border-radius: 4px;
+}
+
+.errormsg {
+    margin: 5px 0;
+    color: red;
+    font-size: small;
+}
+
+.submitbtn:hover {
+    background-color: #060;
+
+}
+
+/*.textitem {*/
+/*    color: gray;*/
+/*}*/

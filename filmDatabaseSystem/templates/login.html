@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="icon" href="/static/img/icon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/login.css') }}" />
+</head>
+<body>
+{% macro render_field(field) %} <!-- 定义字段宏 -->
+{#  <dt>{{ field.label }}:#}
+  <dd>{{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+
+<!-- 登录表单 -->
+<form method="POST">
+    <div class="loginall">
+        <div class="loginbox">
+            <img src="/static/img/filmdbsys.png" width="200px">
+            <div class="boxitem">
+                <div class="formhead" style="color: gray;">>请输入登录信息<</div>
+                {{ form.csrf_token }}
+                {{ render_field(form.username) }}
+                {{ render_field(form.password) }}
+                {% if emsg %}
+                    <div class="errormsg"> {{ emsg }} </div>
+                {% endif %}
+                <div class="textitem">新用户？<a href="{{ url_for('register') }}">注册</a></div>
+                <input type="submit" value="登录" class="submitbtn">
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

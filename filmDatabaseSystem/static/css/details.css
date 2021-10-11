@@ -6,6 +6,7 @@ body {
     overflow-y: scroll;
 }
 
+
 #detailsinfo {
     font-size: 14px;
     align-items: baseline;
@@ -135,10 +136,14 @@ div:focus {
     border-top: 1px solid gray;
 }
 
-.commentitem img{
+.commentitem .commmentleft {
     float: left;
     margin-left: 10px;
     margin-top: 10px;
+}
+
+.commentitem .commentsname{
+    text-align: center;
 }
 
 .commenttext {

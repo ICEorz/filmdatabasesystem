@@ -3,31 +3,30 @@ img {
 }
 
 #navi {
-    margin: 0 auto 0 0;
+    margin: 0;
     height: 50px;
     background: #690;
 }
 
-#navi ul.naviul {
+#navi .naviul {
     margin: 10px 190px;
-    list-style: none;
-    display: flex;
     align-items: center;
-    overflow: visible;
 }
 
-#navi li.naviitem {
-    display: inline;
+#navi .naviitem {
+    display: inline-block;
 }
 
 #navi a.navia {
+    margin-top: 1px;
     line-height: 40px;
     color: #fff;
     text-decoration: none;
-    padding: 14px 20px;
+    padding: 15px 20px;
     border-radius: 4px;
     border: 2px solid transparent;
 }
+
 
 .navia:hover {
     background-color: #060;
@@ -35,16 +34,17 @@ img {
 
 .naviitem {
     padding: 0;
+    line-height: 50px;
+    vertical-align:top;
 }
 
-.naviitem:last-child{
-    margin-left: auto;
-    margin-right: 20px;
-}
+/*.naviitem:last-child{*/
+/*    margin-left: auto;*/
+/*    margin-right: 20px;*/
+/*}*/
 
 #searchbox {
-    display: flex;
-    align-items: center;
+    line-height: 50px;
     width: 250px;
     height: 28px;
     border: 1px solid #ccc;
@@ -55,16 +55,23 @@ img {
 
 #searchinput {
     width: 210px;
-    height: 28px;
-    line-height: 28px \9;
+    height: 26px;
+    /*line-height: 28px \9;*/
     padding: 0 8px;
+    vertical-align: top;
     border: none;
     background-color: #f2f2f5;
     border-radius: 20px;
+    margin-bottom: 10px;
 }
 
 #searchinput:focus {
     outline: none;
+}
+
+.naviform {
+    margin: 0;
+    padding: 0;
 }
 
 #searchbutton {
@@ -76,15 +83,12 @@ img {
     border: none;
     outline: none;
     cursor: pointer;
+    vertical-align:top;
     margin-left: 10px;
 }
 
 input::-webkit-input-placeholder {
     font-size: 13px;
-}
-
-#genredropli {
-
 }
 
 #genredropa {
@@ -102,8 +106,12 @@ input::-webkit-input-placeholder {
     text-align: center;
 }
 
+.btn {
+    height: 49px;
+}
+
 .btn.dropdown-toggle {
-    width: 100%;
+    /*width: 100%;*/
     background-color: #690;
     color: white;
     font-size: 14px;
@@ -112,4 +120,28 @@ input::-webkit-input-placeholder {
 
 .btn.dropdown-toggle:hover {
     background-color: #060;
+}
+
+#indexnavi {
+    margin-left: 30px;
+}
+
+#logoutnavi {
+    height: 40px;
+    float: right;
+}
+
+#searchnavi {
+    margin-right: 30px;
+    /*margin-left: 20px;*/
+    float: right;
+}
+
+#hello {
+    margin-right: 10px;
+    text-align: center;
+    line-height: 50px;
+    height: 50px;
+    color: white;
+    float: right;
 }

@@ -186,27 +186,27 @@ class FilmDatabase(object):
         self.resetclick()
         self.resetscore()
 
-    def load_index(self):
-        with open('./database/filmdb.pkl', 'rb') as f:
-            self.filmdb = pickle.loads(f.read())
-        with open('./database/persondb.pkl', 'rb') as f:
-            self.persondb = pickle.loads(f.read())
-        with open('./database/genredb.pkl', 'rb') as f:
-            self.genredb = pickle.loads(f.read())
+    # def load_index(self):
+    #     with open('./database/filmdb.pkl', 'rb') as f:
+    #         self.filmdb = pickle.loads(f.read())
+    #     with open('./database/persondb.pkl', 'rb') as f:
+    #         self.persondb = pickle.loads(f.read())
+    #     with open('./database/genredb.pkl', 'rb') as f:
+    #         self.genredb = pickle.loads(f.read())
+    #
+    # def save_index(self):
+    #     with open('./database/filmdb.pkl', 'wb') as f:
+    #         f.write(pickle.dumps(self.filmdb))
+    #     with open('./database/persondb.pkl', 'wb') as f:
+    #         f.write(pickle.dumps(self.persondb))
+    #     with open('./database/genredb.pkl', 'wb') as f:
+    #         f.write(pickle.dumps(self.genredb))
 
-    def save_index(self):
-        with open('./database/filmdb.pkl', 'wb') as f:
-            f.write(pickle.dumps(self.filmdb))
-        with open('./database/persondb.pkl', 'wb') as f:
-            f.write(pickle.dumps(self.persondb))
-        with open('./database/genredb.pkl', 'wb') as f:
-            f.write(pickle.dumps(self.genredb))
-
-    def save_ranklist(self):
-        with open('./database/clickranklist.pkl', 'wb') as f:
-            f.write(pickle.dumps(self.clickranklist))
-        with open('./database/scoreranklist.pkl', 'wb') as f:
-            f.write(pickle.dumps(self.scoreranklist))
+    # def save_ranklist(self):
+    #     with open('./database/clickranklist.pkl', 'wb') as f:
+    #         f.write(pickle.dumps(self.clickranklist))
+    #     with open('./database/scoreranklist.pkl', 'wb') as f:
+    #         f.write(pickle.dumps(self.scoreranklist))
 
     def clear_score_and_click(self):
         for data in self.database:
@@ -408,9 +408,15 @@ if __name__ == '__main__':
     # print(db.database[db.get_film_by_exact_name('怪兽电力公司')[0]].actor)
     # print(db.database[98])
     for data in db.database:
-        data.author = data.author[:5]
+        for coo in data.comments:
+            a = []
+            a.append(("zyy", coo))
+            data.comments = a
+            if len(data.comments):
+                print(data.comments)
+
     # db.database[98].img = 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2016401659.webp'
-    db.save_database()
+    # db.save_database()
     # print(db.database[3873])
     #db.database[256].img = 'https://img2.doubanio.com/view/photo/s_ratio_poster/public/p1592298962.webp'
     # db.save_database()

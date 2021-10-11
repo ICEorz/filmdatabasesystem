@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="icon" href="/static/img/icon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/register.css') }}" />
+</head>
+<body>
+    <div class="registerall">
+        <div class="registerbox">
+            <img src="/static/img/filmdbsys.png" width="200px">
+            <div class="errormsg">{{ errormessage }}</div>
+            <form action="{{ url_for('register') }}" method="post">
+                <input type="text" name="Name" placeholder="请输入20位以内用户名" autocomplete="off"/><br>
+                <input type="password" name="Password" placeholder="请输入密码" autocomplete="off"/><br>
+                <input type="password" name="Passwordrec" placeholder="请验证密码" autocomplete="off"/><br>
+                <button type="submit" class="submitbtn">注册</button>
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>
